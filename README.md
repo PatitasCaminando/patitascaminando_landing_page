@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Patitas Caminando - Landing Page 🐾
 
-## Getting Started
+Bienvenido al repositorio oficial de la Landing Page de **Patitas Caminando**, una organización dedicada a rescatar, cuidar, rehabilitar y buscar hogares responsables para animales de compañía que han sido olvidados, abandonados o maltratados.
 
-First, run the development server:
+![Landing Hero](src/assets/documents/landing_hero.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Descripción del Proyecto
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Esta es la primera fase del sitio web oficial (Landing Page), cuyo objetivo es centralizar la información de la organización, permitir a la comunidad conocer a los animales rescatados, facilitar procesos de adopción, recolectar donaciones y habilitar reportes de casos de emergencia.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+El proyecto está desarrollado con tecnologías modernas orientadas al rendimiento y accesibilidad.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tecnologías Utilizadas
 
-## Learn More
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Lenguaje:** [TypeScript](https://www.typescriptlang.org/)
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com/)
+- **Iconografía:** [Lucide React](https://lucide.dev/) & [React Icons](https://react-icons.github.io/react-icons/)
+- **Animaciones:** [Lottie React](https://lottiefiles.com/)
 
-To learn more about Next.js, take a look at the following resources:
+## Estructura Principal
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app`: Rutas principales de la aplicación.
+- `src/components`: Componentes reutilizables agrupados bajo principios de diseño atómico (`atoms`, `molecules`, `organisms`, `sections`, `layout`, `ui`).
+- `src/assets`: Recursos estáticos (imágenes, logos, doodles, lotties).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Instalación y Ejecución Local
 
-## Deploy on Vercel
+1. Clona el repositorio:
+   ```bash
+   git clone git@github.com:PatitasCaminando/patitascaminando_landing_page.git
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Levanta el servidor de desarrollo:
+   ```bash
+   npm run dev
+   ```
+
+4. Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el resultado.
+
+---
+*Este documento se actualizará conforme avance la integración con el backend y las nuevas funcionalidades.*
