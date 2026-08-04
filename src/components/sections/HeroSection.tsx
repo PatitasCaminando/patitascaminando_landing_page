@@ -16,9 +16,6 @@ export const HeroSection = () => {
 
   // Modal State
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
-  const [isAlertLoading, setIsAlertLoading] = useState(false);
-  const [isAlertSuccess, setIsAlertSuccess] = useState(false);
-  const [alertError, setAlertError] = useState<string | null>(null);
 
   const slides = [
     {
@@ -51,24 +48,8 @@ export const HeroSection = () => {
     return () => clearInterval(interval);
   }, [slides.length]);
 
-  const handleAlertSubmit = (data: any) => {
-    setIsAlertLoading(true);
-    setAlertError(null);
-    
-    // Simulate API Call
-    setTimeout(() => {
-      console.log('Reporte enviado', data);
-      setIsAlertSuccess(true);
-      setIsAlertLoading(false);
-    }, 1500);
-  };
-
   const closeAlertModal = () => {
     setIsAlertModalOpen(false);
-    setTimeout(() => {
-      setIsAlertSuccess(false);
-      setAlertError(null);
-    }, 300);
   };
 
   return (
@@ -184,10 +165,6 @@ export const HeroSection = () => {
       <AlertReportModal 
         isOpen={isAlertModalOpen}
         onClose={closeAlertModal}
-        onSubmit={handleAlertSubmit}
-        loading={isAlertLoading}
-        success={isAlertSuccess}
-        error={alertError}
       />
     </section>
   );
