@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, Send, Check } from 'lucide-react';
+import { X, Send, Check } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { AuthLabel } from '../atoms/AuthLabel';
 import { FormErrorMessage } from '../atoms/FormErrorMessage';
@@ -14,7 +14,6 @@ export interface DonationModalProps {
   onClose: () => void;
   onSubmit: (data: any) => void;
   loading: boolean;
-  success: boolean;
   error: string | null;
   defaultUserData?: {
     nombres?: string;
@@ -34,12 +33,12 @@ export const DonationModal: React.FC<DonationModalProps> = ({
   onClose,
   onSubmit,
   loading,
-  success,
   error,
   defaultUserData
 }) => {
+  const defaultName = [defaultUserData?.nombres, defaultUserData?.apellidos].filter(Boolean).join(' ');
   const [formData, setFormData] = useState({
-    nombres: '',
+    nombres: defaultName || '',
     institucion: '',
     telefono: '',
     correo: '',
@@ -50,21 +49,8 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    if (isOpen) {
-      const defaultName = [defaultUserData?.nombres, defaultUserData?.apellidos].filter(Boolean).join(' ');
-      setFormData({
-        nombres: defaultName || '',
-        institucion: '',
-        telefono: '',
-        correo: '',
-        tipoDonacion: [],
-        detalle: '',
-        aceptacionDatos: false,
-      });
-      setValidationErrors({});
-    }
-  }, [isOpen, defaultUserData]);
+  // El estado se inicializa en el useState. Si se requiere un reseteo completo,
+  // el componente padre debe cambiar el 'key' prop del componente.
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -176,24 +162,9 @@ export const DonationModal: React.FC<DonationModalProps> = ({
           </button>
         )}
 
-        {success ? (
-          // Success State
-          <div className="text-center py-8">
-            <div className="mx-auto w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle2 size={40} />
-            </div>
-            <h3 className="text-3xl font-extrabold text-[#153970] mb-4">Donación registrada</h3>
-            <p className="text-[#5F6B70] text-lg mb-8 leading-relaxed">
-              Gracias por tu ayuda. Patitas Caminando revisará la información y se pondrá en contacto para coordinar la entrega.
-            </p>
-            <Button onClick={onClose} className="w-full text-lg py-4">
-              Entendido
-            </Button>
-          </div>
-        ) : (
-          // Form State
-          <div className="text-center flex flex-col max-h-[85vh]">
-            <div className="shrink-0">
+        {/* Form State */}
+        <div className="text-center flex flex-col max-h-[85vh]">
+          <div className="shrink-0">
               <div className="flex justify-center mb-6 mt-2">
                 <CircularShadowImage
                   src={doodleDonacion}
@@ -393,7 +364,6 @@ export const DonationModal: React.FC<DonationModalProps> = ({
               </form>
             </div>
           </div>
-        )}
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { Footer } from '@/components/layout/Footer';
 import { RelatedAnimalsSlider } from '@/components/organisms/RelatedAnimalsSlider';
 import { AdoptionRequestModal } from '@/components/organisms/AdoptionRequestModal';
 import { AdoptionSuccessModal } from '@/components/organisms/AdoptionSuccessModal';
+import { AdoptionErrorModal } from '@/components/organisms/AdoptionErrorModal';
 import { Button } from '@/components/ui/Button';
 import { featuredAnimals } from '@/data/animals';
 import doodleCuerda from '@/assets/ilustraciones/doodles/doodle_cuerda_superior_derecha.png';
@@ -29,7 +30,9 @@ export default function AnimalDetailPage() {
   const [isAdoptionModalOpen, setIsAdoptionModalOpen] = useState(false);
   const [isAdoptionLoading, setIsAdoptionLoading] = useState(false);
   const [isAdoptionSuccess, setIsAdoptionSuccess] = useState(false);
+  const [isAdoptionErrorModalOpen, setIsAdoptionErrorModalOpen] = useState(false);
   const [adoptionError, setAdoptionError] = useState<string | null>(null);
+  const [adoptionFormKey, setAdoptionFormKey] = useState(0);
 
   // Mocked Auth State for demo purposes
   const isLoggedIn = true;
@@ -40,17 +43,24 @@ export default function AnimalDetailPage() {
     edad: 28
   };
 
-  const handleAdoptionSubmit = (data: any) => {
+  const handleAdoptionSubmit = async (data: any) => {
     setIsAdoptionLoading(true);
     setAdoptionError(null);
     
-    // Simulate API Call
-    setTimeout(() => {
-      setIsAdoptionLoading(false);
+    try {
+      // Simulate API Call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      // throw new Error("Test error"); // Forzando el error para probar el Sad Path
       setIsAdoptionModalOpen(false);
       setIsAdoptionSuccess(true);
+      setAdoptionFormKey(prev => prev + 1);
       console.log('Adoption request payload:', data);
-    }, 2000);
+    } catch (err) {
+      setIsAdoptionModalOpen(false);
+      setIsAdoptionErrorModalOpen(true);
+    } finally {
+      setIsAdoptionLoading(false);
+    }
   };
   
   const animal = featuredAnimals.find(a => a.slug === slug);
@@ -351,6 +361,7 @@ export default function AnimalDetailPage() {
       <Footer />
       
       <AdoptionRequestModal
+        key={`adoption-form-${adoptionFormKey}`}
         isOpen={isAdoptionModalOpen}
         onClose={() => {
           setIsAdoptionModalOpen(false);
@@ -366,6 +377,15 @@ export default function AnimalDetailPage() {
         isOpen={isAdoptionSuccess}
         onClose={() => setIsAdoptionSuccess(false)}
         animal={animal}
+      />
+
+      <AdoptionErrorModal
+        isOpen={isAdoptionErrorModalOpen}
+        onRetry={() => {
+          setIsAdoptionErrorModalOpen(false);
+          setIsAdoptionModalOpen(true);
+        }}
+        onClose={() => setIsAdoptionErrorModalOpen(false)}
       />
     </main>
   );

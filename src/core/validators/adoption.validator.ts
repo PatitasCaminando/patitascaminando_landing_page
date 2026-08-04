@@ -11,7 +11,7 @@ export const AdoptionSchema = z.object({
   tipoVivienda: z.string().min(1, 'Debes indicar el tipo de vivienda'),
   detalleInmueble: z.string().min(5, 'Brinda un detalle de tu inmueble'),
   aceptacionDatos: z.literal(true, {
-    errorMap: () => ({ message: 'Debes aceptar la política de privacidad' }),
+    message: 'Debes aceptar la política de privacidad',
   }),
 });
 

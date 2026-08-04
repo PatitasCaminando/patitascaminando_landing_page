@@ -9,6 +9,8 @@ import Image from 'next/image';
 import logoImg from '@/assets/logos/isologo/01_isologo_color_primario_transparente.png';
 import doodleHuesitos from '@/assets/ilustraciones/doodles/doodle_huesitos.png';
 import { DonationModal } from '../organisms/DonationModal';
+import { DonationSuccessModal } from '../organisms/DonationSuccessModal';
+import { DonationErrorModal } from '../organisms/DonationErrorModal';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -20,9 +22,11 @@ export const Header = () => {
 
   // Modal de Donación State
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
+  const [isDonationSuccessModalOpen, setIsDonationSuccessModalOpen] = useState(false);
+  const [isDonationErrorModalOpen, setIsDonationErrorModalOpen] = useState(false);
   const [donationLoading, setDonationLoading] = useState(false);
-  const [donationSuccess, setDonationSuccess] = useState(false);
   const [donationError, setDonationError] = useState<string | null>(null);
+  const [donationFormKey, setDonationFormKey] = useState(0);
 
   const handleDonationSubmit = async (data: any) => {
     setDonationLoading(true);
@@ -30,10 +34,14 @@ export const Header = () => {
     try {
       // Mock API call
       await new Promise(resolve => setTimeout(resolve, 1500));
+      // throw new Error("Test error"); // Forzando el error para probar el Sad Path
       console.log('Donación registrada:', data);
-      setDonationSuccess(true);
+      setIsDonationModalOpen(false);
+      setIsDonationSuccessModalOpen(true);
+      setDonationFormKey(prev => prev + 1);
     } catch (err) {
-      setDonationError('Hubo un error al registrar tu donación. Intenta nuevamente.');
+      setIsDonationModalOpen(false);
+      setIsDonationErrorModalOpen(true);
     } finally {
       setDonationLoading(false);
     }
@@ -42,7 +50,6 @@ export const Header = () => {
   const handleCloseDonationModal = () => {
     setIsDonationModalOpen(false);
     setTimeout(() => {
-      setDonationSuccess(false);
       setDonationError(null);
     }, 300);
   };
@@ -229,12 +236,24 @@ export const Header = () => {
     </header>
 
       <DonationModal 
+        key={donationFormKey}
         isOpen={isDonationModalOpen}
         onClose={handleCloseDonationModal}
         onSubmit={handleDonationSubmit}
         loading={donationLoading}
-        success={donationSuccess}
         error={donationError}
+      />
+      <DonationSuccessModal
+        isOpen={isDonationSuccessModalOpen}
+        onClose={() => setIsDonationSuccessModalOpen(false)}
+      />
+      <DonationErrorModal
+        isOpen={isDonationErrorModalOpen}
+        onRetry={() => {
+          setIsDonationErrorModalOpen(false);
+          setIsDonationModalOpen(true);
+        }}
+        onClose={() => setIsDonationErrorModalOpen(false)}
       />
     </>
   );

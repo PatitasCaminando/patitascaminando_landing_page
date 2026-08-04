@@ -11,7 +11,7 @@ export const DonationSchema = z.object({
   descripcion: z.string().min(5, 'Brinda una breve descripción de tu donación'),
   detalleOtros: z.string().optional(),
   aceptacionDatos: z.literal(true, {
-    errorMap: () => ({ message: 'Debes aceptar la política de privacidad' }),
+    message: 'Debes aceptar la política de privacidad',
   }),
 }).superRefine((data, ctx) => {
   // Si "otros" está en los items seleccionados, detalleOtros es obligatorio

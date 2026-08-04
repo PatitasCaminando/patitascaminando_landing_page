@@ -8,7 +8,7 @@ import { Button } from '../ui/Button';
 import { Animal } from '@/types';
 import { useRouter } from 'next/navigation';
 
-import doodlePerrito from '@/assets/ilustraciones/doodles/adopt/doodle_perrito_adopción.png';
+import doodlePerrito from '@/assets/ilustraciones/doodles/adopt/doodle_perrito_adopcion.png';
 import successAnimation from '@/assets/lotties/success.json';
 
 export interface AdoptionSuccessModalProps {
@@ -67,16 +67,14 @@ export const AdoptionSuccessModal: React.FC<AdoptionSuccessModalProps> = ({
           />
         </div>
 
-        <div className="relative z-10 flex flex-col items-center mt-2">
-          <div className="flex justify-center mb-6">
-            <Image
-              src={doodlePerrito}
-              alt="Adopción Exitosa"
-              width={220}
-              height={220}
-              className="object-contain h-44 w-auto drop-shadow-sm"
-            />
-          </div>
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="flex justify-center mb-6 mt-2">
+          <img
+            src={doodlePerrito.src}
+            alt="Adopción exitosa"
+            className="w-48 h-48 md:w-56 md:h-56 object-contain drop-shadow-[0_15px_25px_rgba(246,146,34,0.4)]"
+          />
+        </div>
 
           <h3 className="text-3xl font-extrabold text-[#153970] mb-4">
             ¡Solicitud enviada con éxito!

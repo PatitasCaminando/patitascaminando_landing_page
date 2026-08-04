@@ -57,7 +57,7 @@ export const FeaturedAdoptionsSection = () => {
       // Sexo Filter
       let matchSexo = true;
       if (filters.sexo !== 'Todos') {
-        const sex = animal.sex.toLowerCase();
+        const sex = (animal.sex || '').toLowerCase();
         const fSex = filters.sexo.toLowerCase();
         matchSexo = sex === fSex;
       }

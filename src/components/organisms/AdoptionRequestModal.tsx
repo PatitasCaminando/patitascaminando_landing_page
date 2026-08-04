@@ -32,12 +32,12 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
   error,
 }) => {
   const [formData, setFormData] = useState({
-    nombres: '',
-    apellidos: '',
+    nombres: user?.nombres || '',
+    apellidos: user?.apellidos || '',
     telefono: '',
     correo: '',
-    direccion: '',
-    edad: '',
+    direccion: user?.direccion || '',
+    edad: user?.edad?.toString() || '',
     motivo: '',
     tipoVivienda: '',
     detalleInmueble: '',
@@ -47,24 +47,10 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [randomSubtitle, setRandomSubtitle] = useState('');
 
-  // Reset and Pre-load data when modal opens
+  // Generar subtitulo cuando se abre
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        nombres: user?.nombres || '',
-        apellidos: user?.apellidos || '',
-        telefono: '',
-        correo: '',
-        direccion: user?.direccion || '',
-        edad: user?.edad?.toString() || '',
-        motivo: '',
-        tipoVivienda: '',
-        detalleInmueble: '',
-        aceptacionDatos: false,
-      });
-      setValidationErrors({});
-      
-      if (animal) {
+      if (animal && !randomSubtitle) {
         const phrases = [
           `${animal.name} puede estar más cerca de encontrar el hogar que siempre esperó.`,
           `Adoptar a ${animal.name} es abrirle la puerta a una nueva oportunidad llena de cuidado y amor.`,

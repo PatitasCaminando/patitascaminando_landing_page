@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/Button';
 import { AlertReportModal } from '../organisms/AlertReportModal';
+import { AlertSuccessModal } from '../organisms/AlertSuccessModal';
+import { AlertErrorModal } from '../organisms/AlertErrorModal';
 import { PawPrint, Heart, HeartHandshake, Home } from 'lucide-react';
 
 import dogHeroImg from '@/assets/perritos/perrito4.jpg';
@@ -16,6 +18,11 @@ export const HeroSection = () => {
 
   // Modal State
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isAlertLoading, setIsAlertLoading] = useState(false);
+  const [isAlertSuccessModalOpen, setIsAlertSuccessModalOpen] = useState(false);
+  const [isAlertErrorModalOpen, setIsAlertErrorModalOpen] = useState(false);
+  const [alertError, setAlertError] = useState<string | null>(null);
+  const [alertFormKey, setAlertFormKey] = useState(0);
 
   const slides = [
     {
@@ -48,8 +55,32 @@ export const HeroSection = () => {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  const handleAlertSubmit = async (data: any) => {
+    setIsAlertLoading(true);
+    setAlertError(null);
+    
+    try {
+      // Simulate API Call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      // throw new Error("Test error"); // Descomentar para forzar error en el reporte
+      console.log('Reporte enviado', data);
+      setIsAlertModalOpen(false);
+      setIsAlertSuccessModalOpen(true);
+      setAlertFormKey(prev => prev + 1);
+    } catch (err) {
+      setIsAlertModalOpen(false);
+      setIsAlertErrorModalOpen(true);
+    } finally {
+      setIsAlertLoading(false);
+    }
+  };
+
   const closeAlertModal = () => {
     setIsAlertModalOpen(false);
+    setTimeout(() => {
+      setIsAlertSuccessModalOpen(false);
+      setAlertError(null);
+    }, 300);
   };
 
   return (
@@ -163,8 +194,26 @@ export const HeroSection = () => {
       </div>
 
       <AlertReportModal 
+        key={`alert-form-${alertFormKey}`}
         isOpen={isAlertModalOpen}
         onClose={closeAlertModal}
+        onSubmit={handleAlertSubmit}
+        loading={isAlertLoading}
+        error={alertError}
+      />
+
+      <AlertSuccessModal 
+        isOpen={isAlertSuccessModalOpen}
+        onClose={() => setIsAlertSuccessModalOpen(false)}
+      />
+
+      <AlertErrorModal 
+        isOpen={isAlertErrorModalOpen}
+        onRetry={() => {
+          setIsAlertErrorModalOpen(false);
+          setIsAlertModalOpen(true);
+        }}
+        onClose={() => setIsAlertErrorModalOpen(false)}
       />
     </section>
   );
