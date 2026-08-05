@@ -32,12 +32,49 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: publication.seoTitle,
     description: publication.seoDescription,
+    keywords: [
+      'Patitas Caminando', 
+      'rescate animal Quito', 
+      'adopción de perros y gatos', 
+      'fundación rescate animal', 
+      'Quito', 
+      'Ecuador', 
+      'animales vulnerables', 
+      'voluntariado animal'
+    ],
+    authors: [{ name: 'Patitas Caminando' }],
+    creator: 'Patitas Caminando',
+    publisher: 'Patitas Caminando',
+    alternates: {
+      canonical: `/publicaciones/${resolvedParams.slug}`,
+    },
     openGraph: {
       title: publication.seoTitle,
       description: publication.seoDescription,
-      images: [imageUrl],
+      siteName: 'Patitas Caminando',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: publication.title,
+        }
+      ],
+      locale: 'es_EC',
       type: 'article',
       publishedTime: publication.publishedAt,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: publication.seoTitle,
+      description: publication.seoDescription,
+      images: [imageUrl],
+    },
+    other: {
+      'geo.region': 'EC-P',
+      'geo.placename': 'Quito',
+      'geo.position': '-0.180653;-78.467834',
+      'ICBM': '-0.180653, -78.467834',
     },
   };
 }

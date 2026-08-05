@@ -25,17 +25,21 @@ export const FeaturedAdoptionsSection = () => {
   const [filters, setFilters] = useState({
     especie: 'Todas',
     sexo: 'Todos',
-    edad: 'Todos', // 'Todos', '1-5', '5-10', '10-15'
+    edad: 'Todos',
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Parse age string to a numeric approximation in years
-  const parseAge = (ageStr: string) => {
+  // Convertir texto de edad a meses totales para filtrado exacto
+  const getAgeInMonths = (ageStr: string) => {
     const lower = ageStr.toLowerCase();
-    if (lower.includes('mes') || lower.includes('meses')) return 0.5; // Menos de 1 año
     const match = lower.match(/\d+/);
-    if (match) return parseInt(match[0], 10);
-    return 1; // Default fallback
+    if (!match) return 12; // Default 1 año
+    
+    const value = parseInt(match[0], 10);
+    if (lower.includes('mes') || lower.includes('meses')) {
+      return value;
+    }
+    return value * 12; // Años a meses
   };
 
   const filteredAnimals = useMemo(() => {
@@ -65,10 +69,12 @@ export const FeaturedAdoptionsSection = () => {
       // Edad Filter
       let matchEdad = true;
       if (filters.edad !== 'Todos') {
-        const numAge = parseAge(animal.age);
-        if (filters.edad === '1-5') matchEdad = numAge >= 0 && numAge <= 5;
-        else if (filters.edad === '5-10') matchEdad = numAge > 5 && numAge <= 10;
-        else if (filters.edad === '10-15') matchEdad = numAge > 10 && numAge <= 15;
+        const months = getAgeInMonths(animal.age);
+        if (filters.edad === '0 a 6 meses') matchEdad = months >= 0 && months <= 6;
+        else if (filters.edad === '7 a 12 meses') matchEdad = months > 6 && months <= 12;
+        else if (filters.edad === '1 a 3 años') matchEdad = months > 12 && months <= 36;
+        else if (filters.edad === '4 a 7 años') matchEdad = months > 36 && months <= 84;
+        else if (filters.edad === '8 años o más') matchEdad = months > 84;
       }
 
       return matchEspecie && matchSexo && matchEdad;
@@ -193,7 +199,7 @@ export const FeaturedAdoptionsSection = () => {
                 <span className="text-[#5F6B70]">Rango de edad</span>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                {['Todos', '1-5', '5-10', '10-15'].map(rango => (
+                {['Todos', '0 a 6 meses', '7 a 12 meses', '1 a 3 años', '4 a 7 años', '8 años o más'].map(rango => (
                   <button
                     key={rango}
                     onClick={() => handleFilterChange('edad', rango)}
