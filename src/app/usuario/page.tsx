@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Info, Heart, Clock, ArrowRight } from 'lucide-react';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/Button';
 import losBonitos from '@/assets/perritos/foto_pura/losbonitos.png';
 
 export default function MisSolicitudesPage() {
+  redirect('/');
   return (
     <div className="w-full flex flex-col max-w-5xl">
       {/* Header Area */}

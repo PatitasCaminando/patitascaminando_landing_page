@@ -1,4 +1,5 @@
 import React from 'react';
+import { redirect } from 'next/navigation';
 import { AuthSplitTemplate } from '@/components/templates/AuthSplitTemplate';
 import { AuthIllustrationPanel } from '@/components/organisms/AuthIllustrationPanel';
 import { RegisterForm } from '@/components/organisms/RegisterForm';
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function RegisterPage() {
+  redirect('/');
   return (
     <AuthSplitTemplate 
       illustrationPanel={
