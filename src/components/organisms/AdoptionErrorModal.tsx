@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import { X, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button';
 import doodleAlerta from '@/assets/ilustraciones/doodles/adopt/doodle_perrito_alerta.png';
 
@@ -73,9 +73,9 @@ export const AdoptionErrorModal: React.FC<AdoptionErrorModalProps> = ({
 
         <Button 
           onClick={onRetry} 
-          className="w-full text-lg py-4 !bg-[#F69222] hover:!bg-[#E0811B] text-white transition-colors border-none"
+          className="w-full text-lg py-4 !bg-[#F69222] hover:!bg-[#E0811B] text-white transition-colors border-none flex items-center justify-center gap-2"
         >
-          Reintentar
+          <RefreshCw size={20} /> Reintentar
         </Button>
       </div>
     </div>
