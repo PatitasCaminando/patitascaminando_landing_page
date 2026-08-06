@@ -1,64 +1,108 @@
 import React from 'react';
 import { Animal } from '@/types';
-import { Heart, CheckCircle2, XCircle, PawPrint, Dog, Cat, Rabbit, ArrowRight } from 'lucide-react';
+import { Heart, PawPrint, Dog, Cat, Calendar, Ruler } from 'lucide-react';
 import Link from 'next/link';
+import Lottie from 'lottie-react';
+import loadingAnimation from '@/assets/lotties/loading.json';
 
-export const AnimalCard: React.FC<{ animal: Animal }> = ({ animal }) => {
-  const getBadgeStyle = () => {
-    switch (animal.status) {
-      case 'Adopción disponible':
-        return { bg: 'bg-white/95', text: 'text-[#4CA456]', icon: <CheckCircle2 size={14} className="mr-1" /> };
-      case 'Adopción no disponible':
-        return { bg: 'bg-white/95', text: 'text-[#E86F61]', icon: <XCircle size={14} className="mr-1" /> };
+export const AnimalCard: React.FC<{ 
+  animal: Animal;
+  index?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}> = ({ animal, index = 0, className, style }) => {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
 
-      default:
-        return { bg: 'bg-white/95', text: 'text-[#F69222]', icon: null };
-    }
+  const animalStatusMap: Record<string, { label: string; textClass: string; bgClass: string; iconBgClass: string }> = {
+    disponible: { label: 'Adopción disponible', textClass: 'text-[#4CA456]', bgClass: 'bg-[#E6F4EA]', iconBgClass: 'bg-[#4CA456]' },
+    en_proceso: { label: 'En proceso', textClass: 'text-[#62D9D9]', bgClass: 'bg-[#EAF4F5]', iconBgClass: 'bg-[#62D9D9]' },
+    adoptado: { label: 'Adoptado', textClass: 'text-[#8A969B]', bgClass: 'bg-[#F1F3F4]', iconBgClass: 'bg-[#8A969B]' },
+    no_disponible: { label: 'No disponible', textClass: 'text-[#F69222]', bgClass: 'bg-[#FFF7EA]', iconBgClass: 'bg-[#F69222]' },
+    archivado: { label: 'Archivado', textClass: 'text-[#8A969B]', bgClass: 'bg-[#F1F3F4]', iconBgClass: 'bg-[#8A969B]' },
   };
+
+  const statusConfig = animalStatusMap[animal.status] || animalStatusMap.no_disponible;
 
   const getSpeciesIcon = () => {
     switch (animal.category.toLowerCase()) {
       case 'perro':
-      case 'perra': return <Dog size={16} className="text-[#8A969B]" />;
+      case 'perra': return <Dog size={24} className="text-[#153970] shrink-0" />;
       case 'gata':
-      case 'gato': return <Cat size={16} className="text-[#8A969B]" />;
-      default: return <PawPrint size={16} className="text-[#8A969B]" />;
+      case 'gato': return <Cat size={24} className="text-[#153970] shrink-0" />;
+      default: return <PawPrint size={24} className="text-[#153970] shrink-0" />;
     }
-  }
+  };
 
-  const style = getBadgeStyle();
+  const lineColors = ['bg-[#F69222]', 'bg-[#62D9D9]', 'bg-[#153970]', 'bg-[#612758]'];
+  const lineColor = lineColors[index % 4];
 
   return (
-    <div className="bg-white rounded-[24px] overflow-hidden shadow-patitas-sm hover:shadow-patitas hover:-translate-y-1 transition-all duration-300 flex flex-col border border-[#F1D9BD]">
-      <div className="relative h-[340px] w-full bg-[#F7E5CF]">
+    <div 
+      className={`group bg-white rounded-[32px] overflow-hidden shadow-patitas-sm hover:shadow-patitas hover:-translate-y-1 transition-all duration-300 flex flex-col border border-[#F1D9BD] ${className || ''}`}
+      style={style}
+    >
+      <div className="relative h-[300px] w-full bg-[#F7E5CF] overflow-hidden">
+        {/* Placeholder spinner while loading */}
+        {!imageLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#F7E5CF]">
+            <Lottie animationData={loadingAnimation} loop={true} className="w-16 h-16" />
+          </div>
+        )}
         <img
           src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}
           alt={animal.name}
-          className="w-full h-full object-cover"
+          onLoad={() => setImageLoaded(true)}
+          className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out group-hover:scale-110 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+          loading="lazy"
         />
       </div>
-      <div className="p-6 text-center flex-1 flex flex-col justify-between">
-        <div>
-          <div className={`flex items-center justify-center mb-1 ${style.text} text-sm font-medium`}>
-            {style.icon}
-            <span className="whitespace-nowrap">{animal.status}</span>
-          </div>
-          <h3 className="text-2xl font-bold text-[#153970] mb-1">{animal.name}</h3>
-          <div className="flex flex-col items-center justify-center gap-1 mb-4">
-            <div className="flex items-center gap-2">
-              {getSpeciesIcon()}
-              <p className="text-[#8A969B] font-medium">{animal.category} • {animal.age}</p>
+      <div className="relative p-5 pt-8 text-center flex-1 flex flex-col justify-between bg-white">
+        
+        {/* Floating Badge (Nuestra Labor Style) */}
+        <div 
+          className={`absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full ${statusConfig.iconBgClass} text-white flex items-center justify-center shadow-sm border-4 border-white z-10 transition-transform duration-300 group-hover:-translate-y-1`}
+          title={statusConfig.label}
+        >
+          <PawPrint size={24} />
+        </div>
+
+        <div className="flex-1 flex flex-col items-center w-full px-2">
+          <h3 className="text-2xl font-bold text-[#153970] mb-2">{animal.name}</h3>
+          <div className={`animal-card-status-divider animal-card-status-divider--${animal.status}`}></div>
+          
+          <div className="w-full relative mb-4">
+            <div className="grid grid-cols-4 w-full gap-2 text-[11px] text-[#5F6B70] font-medium text-center px-0.5">
+              <div className="flex flex-col items-center justify-start gap-1.5">
+                {getSpeciesIcon()}
+                <span className="line-clamp-2 leading-tight">{animal.category}</span>
+              </div>
+              <div className="flex flex-col items-center justify-start gap-1.5">
+                <Calendar size={24} className="text-[#F69222] shrink-0" />
+                <span className="line-clamp-2 leading-tight">{animal.age}</span>
+              </div>
+              <div className="flex flex-col items-center justify-start gap-1.5">
+                <Heart size={24} className="text-[#612758] shrink-0" />
+                <span className="capitalize line-clamp-2 leading-tight">{animal.sex}</span>
+              </div>
+              <div className="flex flex-col items-center justify-start gap-1.5">
+                <Ruler size={24} className="text-[#62D9D9] shrink-0" />
+                <span className="leading-tight line-clamp-2">{animal.size && animal.size !== 'No especificado' ? animal.size.charAt(0).toUpperCase() + animal.size.slice(1).toLowerCase() : 'No especificado'}</span>
+              </div>
             </div>
-            {animal.sex && (
-              <p className="text-[#8A969B] text-sm">{animal.sex}</p>
-            )}
+          </div>
+          
+          <div className={`mb-5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider mx-auto ${statusConfig.textClass} ${statusConfig.bgClass}`}>
+            {statusConfig.label}
           </div>
         </div>
+        
         <Link 
           href={`/adopciones/${animal.slug}`}
-          className="w-full py-2.5 border-2 border-[#FFE2C2] text-[#F69222] font-bold rounded-full hover:border-[#F69222] hover:bg-[#FFF7EA] transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3.5 border-2 border-[#FFE2C2] text-[#F69222] font-bold rounded-full hover:border-[#F69222] hover:bg-[#FDF3E7] hover:text-[#D67C14] transition-colors flex items-center justify-center gap-2 mt-auto"
         >
-          <PawPrint size={16} /> {animal.cta}
+          <PawPrint size={18} /> {animal.cta}
         </Link>
       </div>
     </div>

@@ -1,13 +1,18 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { AnimalCard } from '../ui/AnimalCard';
-import { featuredAnimals } from '@/data/animals';
+import { AnimalsService } from '@/core/services/animals.service';
+import { Animal } from '@/types';
 import { Button } from '../ui/Button';
+import Lottie from 'lottie-react';
+import loadingAnimation from '@/assets/lotties/loading.json';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, PawPrint, Calendar } from 'lucide-react';
 import doodlePatitasIzqSup from '@/assets/ilustraciones/doodles/doodle_patitas_esquineras_izquierda_superior.png';
 import doodlePatitasIzqInf from '@/assets/ilustraciones/doodles/doodle_patitas_esquineras_izquierda_inferior.png';
 import doodlePatitasDerInf from '@/assets/ilustraciones/doodles/doodle_patitas_esquineras_derecha_inferior.png';
+import { EmptyState } from '../ui/EmptyState';
+import { ApiErrorState } from '../ui/ApiErrorState';
 
 // Icono simple de Sexo si no está en lucide
 const SexIcon = ({ className }: { className?: string }) => (
@@ -29,30 +34,72 @@ export const FeaturedAdoptionsSection = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Convertir texto de edad a meses totales para filtrado exacto
   const getAgeInMonths = (ageStr: string) => {
+    if (!ageStr) return 12;
     const lower = ageStr.toLowerCase();
-    const match = lower.match(/\d+/);
-    if (!match) return 12; // Default 1 año
     
-    const value = parseInt(match[0], 10);
-    if (lower.includes('mes') || lower.includes('meses')) {
-      return value;
+    let years = 0;
+    let months = 0;
+
+    const match = lower.match(/\d+/);
+    if (match) {
+      const val = parseInt(match[0], 10);
+      if (lower.includes('mes')) {
+        months = val;
+      } else {
+        years = val;
+      }
+    } else {
+      if (lower.includes('un mes')) months = 1;
+      else if (lower.includes('un año') || lower.includes('año')) years = 1;
     }
-    return value * 12; // Años a meses
+
+    if (lower.includes('y medio')) {
+      months += 6;
+    }
+
+    return (years * 12) + months;
   };
 
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [totalApiAnimals, setTotalApiAnimals] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const fetchAnimals = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMsg(null);
+      // Traemos más límite para que funcione el frontend filtering si es necesario,
+      // o idealmente el filtrado se haría por API en un futuro.
+      const response = await AnimalsService.getPublicAnimals({ page: 1, limit: 50 });
+      setAnimals(response.items);
+      setTotalApiAnimals(response.total || response.items.length);
+    } catch (error: any) {
+      console.error('Error fetching animals:', error);
+      setErrorMsg(error.message || 'Error fetching animals');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAnimals();
+  }, []);
+
   const filteredAnimals = useMemo(() => {
-    if (!isExpanded) return featuredAnimals.slice(0, 5); // Default view
+    if (!isExpanded) return animals.slice(0, 4); // Default view: 4 items
     
-    return featuredAnimals.filter(animal => {
+    return animals.filter(animal => {
       // Especie Filter
       let matchEspecie = true;
       if (filters.especie !== 'Todas') {
         const cat = animal.category.toLowerCase();
         const fEsp = filters.especie.toLowerCase();
-        if (cat === 'ambos') {
-          if (fEsp !== 'todas') matchEspecie = false;
+        if (fEsp === 'perro') {
+          matchEspecie = cat === 'perro' || cat === 'perra';
+        } else if (fEsp === 'gato') {
+          matchEspecie = cat === 'gato' || cat === 'gata';
         } else {
           matchEspecie = cat === fEsp;
         }
@@ -63,23 +110,28 @@ export const FeaturedAdoptionsSection = () => {
       if (filters.sexo !== 'Todos') {
         const sex = (animal.sex || '').toLowerCase();
         const fSex = filters.sexo.toLowerCase();
-        matchSexo = sex === fSex;
+        
+        if (fSex === 'hembra y macho') {
+          matchSexo = sex === 'ambos' || sex === 'hembra y macho';
+        } else {
+          matchSexo = sex === fSex;
+        }
       }
 
       // Edad Filter
       let matchEdad = true;
       if (filters.edad !== 'Todos') {
-        const months = getAgeInMonths(animal.age);
+        const months = getAgeInMonths(animal.age || '');
         if (filters.edad === '0 a 6 meses') matchEdad = months >= 0 && months <= 6;
         else if (filters.edad === '7 a 12 meses') matchEdad = months > 6 && months <= 12;
-        else if (filters.edad === '1 a 3 años') matchEdad = months > 12 && months <= 36;
+        else if (filters.edad === '1 a 3 años') matchEdad = months >= 12 && months <= 36;
         else if (filters.edad === '4 a 7 años') matchEdad = months > 36 && months <= 84;
         else if (filters.edad === '8 años o más') matchEdad = months > 84;
       }
 
       return matchEspecie && matchSexo && matchEdad;
     });
-  }, [isExpanded, filters]);
+  }, [isExpanded, filters, animals]);
 
   const totalPages = Math.ceil(filteredAnimals.length / ITEMS_PER_PAGE);
   const currentAnimals = isExpanded 
@@ -151,9 +203,9 @@ export const FeaturedAdoptionsSection = () => {
           </Button>
         </div>
         
-        {/* Filtros */}
+        {/* Filtros para vista expandida */}
         {isExpanded && (
-          <div className="bg-white/50 backdrop-blur-sm border border-[#F1D9BD] rounded-3xl p-4 md:p-6 mb-8 flex flex-col md:flex-row flex-wrap gap-6 items-start md:items-center">
+          <div className="bg-white/50 backdrop-blur-sm border border-[#F1D9BD] rounded-3xl p-4 md:py-4 md:px-6 mb-8 flex flex-col xl:flex-row flex-wrap gap-5 xl:gap-8 items-start xl:items-center opacity-0 translate-y-4 animate-[slideUp_0.5s_ease-out_forwards]">
             
             {/* Especie */}
             <div className="flex items-center gap-3 w-full md:w-auto">
@@ -168,9 +220,7 @@ export const FeaturedAdoptionsSection = () => {
               >
                 <option value="Todas">Todas</option>
                 <option value="Perro">Perro</option>
-                <option value="Perra">Perra</option>
                 <option value="Gato">Gato</option>
-                <option value="Gata">Gata</option>
               </select>
             </div>
 
@@ -194,49 +244,79 @@ export const FeaturedAdoptionsSection = () => {
 
             {/* Edad */}
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <div className="flex items-center gap-2 text-[#F69222] font-semibold">
+              <div className="flex items-center gap-2 text-[#F69222] font-semibold shrink-0">
                 <Calendar size={18} />
                 <span className="text-[#5F6B70]">Rango de edad</span>
               </div>
-              <div className="flex items-center gap-2 flex-wrap">
+              {/* Chips (Desktop) */}
+              <div className="hidden md:flex items-center gap-1.5 flex-wrap">
                 {['Todos', '0 a 6 meses', '7 a 12 meses', '1 a 3 años', '4 a 7 años', '8 años o más'].map(rango => (
                   <button
                     key={rango}
                     onClick={() => handleFilterChange('edad', rango)}
-                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border ${
-                      filters.edad === rango 
-                        ? 'bg-[#FDF3E7] border-[#F69222] text-[#F69222]' 
-                        : 'bg-transparent border-transparent text-[#5F6B70] hover:bg-[#FDF3E7]/50 border-[#F1D9BD]'
+                    className={`px-2.5 py-1 rounded-full text-[13px] font-semibold transition-colors ${
+                      filters.edad === rango
+                        ? 'bg-[#F69222] text-white border-transparent'
+                        : 'bg-white text-[#5F6B70] border border-[#F1D9BD] hover:border-[#F69222] hover:text-[#F69222]'
                     }`}
                   >
                     {rango !== 'Todos' ? rango : 'Todos'}
                   </button>
                 ))}
               </div>
-            </div>
 
+              {/* Select (Mobile) */}
+              <select 
+                value={filters.edad} 
+                onChange={(e) => handleFilterChange('edad', e.target.value)}
+                className="md:hidden flex-1 bg-transparent border border-[#F1D9BD] rounded-full px-4 py-2 text-[#5F6B70] font-medium outline-none focus:border-[#F69222] appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%24%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M6%209L12%2015L18%209%22%20stroke%3D%22%23F69222%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[position:right_0.5rem_center] pr-10"
+              >
+                {['Todos', '0 a 6 meses', '7 a 12 meses', '1 a 3 años', '4 a 7 años', '8 años o más'].map(rango => (
+                  <option key={rango} value={rango}>{rango}</option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
 
-        {/* Grid o Empty State */}
-        {currentAnimals.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {currentAnimals.map(animal => (
-              <AnimalCard key={animal.id} animal={animal} />
-            ))}
+        {/* Grid de Animales */}
+        {isLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <Lottie animationData={loadingAnimation} loop={true} className="w-32 h-32" />
+          </div>
+        ) : errorMsg ? (
+          <div className="py-10">
+            <ApiErrorState onRetry={fetchAnimals} />
+          </div>
+        ) : currentAnimals.length === 0 ? (
+          <div className="py-10">
+            <EmptyState 
+              type={isExpanded && Object.values(filters).some(v => v !== 'Todas' && v !== 'Todos') ? 'filters' : 'catalog'}
+              onClearFilters={() => {
+                setFilters({ especie: 'Todas', sexo: 'Todos', edad: 'Todos' });
+                setCurrentPage(1);
+              }}
+            />
           </div>
         ) : (
-          <div className="text-center py-16 px-4 bg-white/40 border border-[#F1D9BD] rounded-[32px]">
-            <PawPrint size={48} className="mx-auto text-[#F1D9BD] mb-4" />
-            <h3 className="text-xl font-bold text-[#153970] mb-2">No encontramos animalitos con estos filtros por ahora.</h3>
-            <p className="text-[#5F6B70]">Prueba cambiando los filtros o vuelve a ver todos los rescatados.</p>
-            <Button 
-              variant="outline" 
-              onClick={() => setFilters({ especie: 'Todas', sexo: 'Todos', edad: 'Todos' })}
-              className="mt-6 border-[#F69222] text-[#F69222] hover:bg-[#F69222] hover:text-white"
-            >
-              Limpiar filtros
-            </Button>
+          <div className="flex flex-col w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto w-full">
+              {currentAnimals.map((animal, index) => (
+                <AnimalCard 
+                  key={animal.id} 
+                  animal={animal}
+                  index={index}
+                  className={`opacity-0 translate-y-4 animate-[slideUp_0.5s_ease-out_forwards]`}
+                  style={{ animationDelay: `${index * 100}ms` }}
+                />
+              ))}
+            </div>
+            
+            <div className="w-full max-w-7xl mx-auto mt-12 pt-8 border-t border-[#F1D9BD] flex justify-start">
+              <p className="text-[#5F6B70] text-[15px] font-medium">
+                Estás viendo <span className="text-[#F69222] font-bold text-base">{currentAnimals.length}</span> de <span className="text-[#F69222] font-bold text-base">{totalApiAnimals}</span> animalitos que esperan ser conocidos.
+              </p>
+            </div>
           </div>
         )}
 

@@ -10,7 +10,16 @@ import { AdoptionRequestModal } from '@/components/organisms/AdoptionRequestModa
 import { AdoptionSuccessModal } from '@/components/organisms/AdoptionSuccessModal';
 import { AdoptionErrorModal } from '@/components/organisms/AdoptionErrorModal';
 import { Button } from '@/components/ui/Button';
-import { featuredAnimals } from '@/data/animals';
+import { AnimalsService } from '@/core/services/animals.service';
+import { AdoptionsService } from '@/core/services/adoptions.service';
+import { Animal } from '@/types';
+import { HttpError } from '@/core/api/http-client';
+import { ErrorStateTemplate } from '@/components/ui/ErrorStateTemplate';
+import doodleGeneric from '@/assets/errors/error_generic.png';
+import doodleInferiorIzquierdo from '@/assets/ilustraciones/doodles/adopt/doodle_marca_esquinero_inferior_derecha.png';
+import doodleInferiorDerecho from '@/assets/ilustraciones/doodles/adopt/doodle_marca_esquinero_superior_derecha.png';
+import Lottie from 'lottie-react';
+import loadingAnimation from '@/assets/lotties/loading.json';
 import doodleCuerda from '@/assets/ilustraciones/doodles/doodle_cuerda_superior_derecha.png';
 import doodleEsquinaSuperiorIzquierda from '@/assets/ilustraciones/doodles/doodle_marca_esquinero_superior_izquierdo.png';
 import doodleEsquinaSuperiorDerecha from '@/assets/ilustraciones/doodles/adopt/doodle_marca_esquinero_superior_derecha.png';
@@ -18,13 +27,102 @@ import doodleEsquinaInferiorDerecha from '@/assets/ilustraciones/doodles/adopt/d
 import doodlePatitas from '@/assets/ilustraciones/doodles/adopt/doodle_marca_patitas_naranjas.png';
 import { 
   ChevronLeft, Share2, CheckCircle2, XCircle, PawPrint, 
-  Cat, Dog, Info, Heart, ShieldCheck, Calendar, Ruler 
+  Cat, Dog, Info, Heart, ShieldCheck, Calendar, Ruler, Clock
 } from 'lucide-react';
+
+function getAnimalEmotionalPhrase(animal: { name: string; sex?: string; status: string; }): string {
+  const name = animal.name;
+  const sex = animal.sex?.toLowerCase() || '';
+
+  const isPlural =
+    sex === 'ambos' ||
+    name.toLowerCase().startsWith('los ') ||
+    name.toLowerCase().startsWith('las ');
+
+  const phrases: Record<string, string> = {
+    disponible: isPlural
+      ? `Al adoptar a ${name}, les das una segunda oportunidad y ganas compañeros fieles para toda la vida.`
+      : `Al adoptar a ${name}, le das una segunda oportunidad y ganas una compañía fiel para toda la vida.`,
+    no_disponible: isPlural
+      ? `${name} no están disponibles para adopción en este momento, pero puedes conocer su historia y acompañar su proceso.`
+      : `${name} no está disponible para adopción en este momento, pero puedes conocer su historia y acompañar su proceso.`,
+    en_proceso: isPlural
+      ? `${name} ya se encuentran en proceso de adopción, una nueva oportunidad que puede cambiar sus vidas.`
+      : `${name} ya se encuentra en proceso de adopción, una nueva oportunidad que puede cambiar su vida.`,
+    adoptado: isPlural
+      ? `${name} ya encontraron un hogar, y su historia nos recuerda que cada adopción responsable cambia vidas.`
+      : `${name} ya encontró un hogar, y su historia nos recuerda que cada adopción responsable cambia una vida.`,
+    archivado: 'Este perfil ya no se encuentra disponible.',
+  };
+
+  return phrases[animal.status] ?? '';
+}
+
+function getAnimalCareLabels(sex?: string) {
+  const s = sex?.toLowerCase() || '';
+  if (s === 'hembra') {
+    return {
+      sterilized: 'Esterilizada',
+      vaccinated: 'Vacunada',
+      dewormed: 'Desparasitada',
+    };
+  }
+
+  if (s === 'ambos') {
+    return {
+      sterilized: 'Esterilizados',
+      vaccinated: 'Vacunados',
+      dewormed: 'Desparasitados',
+    };
+  }
+
+  return {
+    sterilized: 'Esterilizado',
+    vaccinated: 'Vacunado',
+    dewormed: 'Desparasitado',
+  };
+}
 
 export default function AnimalDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const [copied, setCopied] = useState(false);
+
+  const [animal, setAnimal] = useState<Animal | null>(null);
+  const [relatedAnimals, setRelatedAnimals] = useState<Animal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchAnimal = async () => {
+      setIsLoading(true);
+      
+      try {
+        const data = await AnimalsService.getAnimalBySlug(slug);
+        setAnimal(data);
+        
+        if (data) {
+          // Fetch related animals
+          const response = await AnimalsService.getPublicAnimals({ limit: 10 });
+          let related = response.items
+            .filter(a => a.category === data.category && a.id !== data.id)
+            .slice(0, 3);
+            
+          if (related.length < 3) {
+            const moreRelated = response.items
+              .filter(a => a.id !== data.id && !related.find(r => r.id === a.id))
+              .slice(0, 3 - related.length);
+            related = [...related, ...moreRelated];
+          }
+          setRelatedAnimals(related);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (slug) fetchAnimal();
+  }, [slug]);
 
   // Adoption Modal State
   const [isAdoptionModalOpen, setIsAdoptionModalOpen] = useState(false);
@@ -34,74 +132,91 @@ export default function AnimalDetailPage() {
   const [adoptionError, setAdoptionError] = useState<string | null>(null);
   const [adoptionFormKey, setAdoptionFormKey] = useState(0);
 
-  // Mocked Auth State for demo purposes
-  const isLoggedIn = true;
-  const mockUser = {
-    nombres: 'María',
-    apellidos: 'Gómez',
-    direccion: 'Av. Siempre Viva 123',
-    edad: 28
-  };
+  // Eliminamos los datos quemados para que el formulario aparezca en blanco
+  const isLoggedIn = false;
+  const mockUser = null;
 
   const handleAdoptionSubmit = async (data: any) => {
     setIsAdoptionLoading(true);
     setAdoptionError(null);
     
     try {
-      // Simulate API Call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      // throw new Error("Test error"); // Forzando el error para probar el Sad Path
+      console.log('Adoption request real payload:', data);
+      await AdoptionsService.submitApplication(data);
+      
+      // Success path
       setIsAdoptionModalOpen(false);
       setIsAdoptionSuccess(true);
-      setAdoptionFormKey(prev => prev + 1);
-      console.log('Adoption request payload:', data);
-    } catch (err) {
-      setIsAdoptionModalOpen(false);
-      setIsAdoptionErrorModalOpen(true);
+      setAdoptionFormKey(prev => prev + 1); // Resets form
+    } catch (err: any) {
+      console.error('Error submitting adoption:', err);
+      
+      if (err instanceof HttpError && err.statusCode === 400) {
+        // Error de validación del backend: mantenemos el modal abierto
+        const backendMessage = typeof err.data?.message === 'string' 
+          ? err.data.message 
+          : Array.isArray(err.data?.message) 
+            ? err.data.message.join(', ') 
+            : 'Error de validación del servidor.';
+        setAdoptionError(backendMessage);
+      } else {
+        // Error 500 o de red: cerramos modal y mostramos error modal
+        setIsAdoptionModalOpen(false);
+        setIsAdoptionErrorModalOpen(true);
+      }
     } finally {
       setIsAdoptionLoading(false);
     }
   };
   
-  const animal = featuredAnimals.find(a => a.slug === slug);
-
-  if (!animal) {
+  if (isLoading) {
     return (
       <main className="min-h-screen bg-[#FDF3E7] flex flex-col">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center mt-20">
-          <PawPrint size={64} className="text-[#F1D9BD] mb-4" />
-          <h1 className="text-3xl font-extrabold text-[#153970] mb-2">Animalito no encontrado</h1>
-          <p className="text-[#5F6B70] max-w-md mx-auto mb-8">
-            No pudimos encontrar esta ficha de adopción. Puedes volver a la sección de adopciones para conocer a otros rescatados.
-          </p>
-          <Link href="/#adopciones">
-            <Button variant="primary" size="lg" className="rounded-full px-8 flex items-center gap-2">
-              <ChevronLeft size={18} />
-              Volver a adopciones
-            </Button>
-          </Link>
+          <Lottie animationData={loadingAnimation} loop={true} className="w-32 h-32" />
         </div>
         <Footer />
       </main>
     );
   }
 
-  const isAvailable = animal.status === 'Adopción disponible';
-
-  // Obtener animales relacionados (misma especie, excluir actual)
-  const relatedAnimals = featuredAnimals
-    .filter(a => a.slug !== slug && a.category === animal.category)
-    .slice(0, 4);
-    
-  // Si no hay suficientes, rellenar con otros
-  if (relatedAnimals.length < 3) {
-    const moreRelated = featuredAnimals
-      .filter(a => a.slug !== slug && !relatedAnimals.find(r => r.slug === a.slug))
-      .slice(0, 4 - relatedAnimals.length);
-    relatedAnimals.push(...moreRelated);
+  if (!animal) {
+    return (
+      <main className="min-h-screen bg-[#FDF3E7] flex flex-col">
+        <Header />
+        <div className="flex-1 flex flex-col justify-center py-20 mt-16 relative">
+          {/* Esquinero Inferior Izquierdo (cerca del footer) */}
+          <img 
+            src={doodleInferiorIzquierdo.src} 
+            alt="" 
+            aria-hidden="true"
+            className="absolute -bottom-10 md:-bottom-16 lg:-bottom-24 -left-6 md:-left-10 lg:-left-14 w-32 md:w-48 lg:w-72 z-0 pointer-events-none" 
+          />
+          {/* Esquinero Inferior Derecho (cerca del footer) */}
+          <img 
+            src={doodleInferiorDerecho.src} 
+            alt="" 
+            aria-hidden="true"
+            className="absolute -bottom-8 md:-bottom-12 lg:-bottom-16 -right-6 md:-right-10 lg:-right-14 w-40 md:w-64 lg:w-96 z-0 pointer-events-none" 
+          />
+          <ErrorStateTemplate
+            title="Animalito no encontrado"
+            message="No pudimos encontrar esta ficha de adopción. Puedes volver a la sección de adopciones para conocer a otros rescatados."
+            doodleSrc={doodleGeneric.src}
+            doodleClassName="w-80 sm:w-96 md:w-[26rem] lg:w-[30rem] xl:w-[36rem] max-w-full drop-shadow-sm pointer-events-none -mb-10 md:-mb-14 lg:-mb-20"
+            primaryActionLabel="Volver a adopciones"
+            primaryActionHref="/#adopciones"
+            isGlobal={true}
+          />
+        </div>
+        <Footer />
+      </main>
+    );
   }
 
+  const isAvailable = animal.status === 'disponible';
+    
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
@@ -131,6 +246,26 @@ export default function AnimalDetailPage() {
     }
   };
 
+  const animalStatusMap: Record<string, { label: string; textClass: string; bgClass: string; icon: React.ReactNode }> = {
+    disponible: { label: 'Adopción disponible', textClass: 'text-[#4CA456]', bgClass: 'bg-[#E6F4EA]', icon: <CheckCircle2 size={16} /> },
+    en_proceso: { label: 'En proceso', textClass: 'text-[#62D9D9]', bgClass: 'bg-[#EAF4F5]', icon: <Clock size={16} /> },
+    adoptado: { label: 'Adoptado', textClass: 'text-[#8A969B]', bgClass: 'bg-[#F1F3F4]', icon: <Heart size={16} /> },
+    no_disponible: { label: 'No disponible', textClass: 'text-[#F69222]', bgClass: 'bg-[#FFF7EA]', icon: <Info size={16} /> },
+    archivado: { label: 'Archivado', textClass: 'text-[#8A969B]', bgClass: 'bg-[#F1F3F4]', icon: <Info size={16} /> },
+  };
+
+  const statusConfig = animalStatusMap[animal.status] || animalStatusMap.no_disponible;
+  const canAdopt = animal.status === 'disponible' && (animal as any).isActive !== false && (animal as any).isPubliclyVisible !== false;
+
+  const adoptionBlockedMessages: Record<string, string> = {
+    en_proceso: 'En proceso de adopción',
+    adoptado: 'Ya encontró un hogar',
+    no_disponible: 'No se puede iniciar adopción',
+    archivado: 'Perfil no disponible',
+  };
+
+  const careLabels = getAnimalCareLabels(animal.sex);
+
   return (
     <main className="min-h-screen bg-white flex flex-col font-inter">
       <Header />
@@ -142,14 +277,14 @@ export default function AnimalDetailPage() {
           src={doodleEsquinaSuperiorIzquierda.src} 
           alt="" 
           aria-hidden="true" 
-          className="absolute -top-4 -left-4 md:-top-6 md:-left-6 lg:-top-8 lg:-left-8 w-48 sm:w-64 md:w-80 lg:w-[400px] xl:w-[500px] opacity-30 pointer-events-none select-none z-0 block"
+          className="absolute -top-4 -left-4 md:-top-6 md:-left-6 lg:-top-8 lg:-left-8 w-48 sm:w-64 md:w-80 lg:w-[400px] xl:w-[500px] pointer-events-none select-none z-0 block"
         />
         {/* Doodle Esquina Superior Derecha */}
         <img 
           src={doodleEsquinaSuperiorDerecha.src} 
           alt="" 
           aria-hidden="true" 
-          className="absolute -top-16 -right-16 md:-top-24 md:-right-24 lg:-top-32 lg:-right-32 xl:-top-40 xl:-right-40 w-48 sm:w-64 md:w-80 lg:w-[400px] xl:w-[500px] opacity-30 pointer-events-none select-none z-0 block"
+          className="absolute -top-16 -right-16 md:-top-24 md:-right-24 lg:-top-32 lg:-right-32 xl:-top-40 xl:-right-40 w-48 sm:w-64 md:w-80 lg:w-[400px] xl:w-[500px] pointer-events-none select-none z-0 block"
         />
         
         <div className="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
@@ -158,11 +293,11 @@ export default function AnimalDetailPage() {
             
             {/* Image (Left on Desktop, order 1 on mobile) */}
             <div className="w-full lg:w-[45%] xl:w-[45%] order-1 lg:order-1 relative">
-              <div className="w-full h-[350px] sm:h-[450px] lg:h-full min-h-[550px] lg:min-h-[600px] rounded-[32px] overflow-hidden relative shadow-patitas-sm">
+              <div className="w-full h-[350px] sm:h-[450px] lg:h-full min-h-[550px] lg:min-h-[600px] rounded-[32px] overflow-hidden relative shadow-patitas-sm group">
                 <img 
                   src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}
-                  alt={animal.name}
-                  className="w-full h-full object-cover absolute inset-0 hover:scale-105 transition-transform duration-700"
+                  alt={`Foto de ${animal.name}`}
+                  className="w-[110%] h-[110%] object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
             </div>
@@ -180,16 +315,15 @@ export default function AnimalDetailPage() {
                 <span className="text-[#5F6B70]">{animal.name}</span>
               </div>
               
-              <div className="flex items-center gap-4 mb-3 flex-wrap">
+              <div className="flex items-center gap-4 mb-2 flex-wrap">
                 <h1 className="text-4xl md:text-5xl font-extrabold text-[#153970]">{animal.name}</h1>
                 
-                <div className={`flex items-center gap-2 text-sm font-bold px-3 py-1.5 rounded-full ${
-                  isAvailable ? 'bg-[#E6F4EA] text-[#4CA456]' : 'bg-[#FFEBEE] text-[#E86F61]'
-                }`}>
-                  {isAvailable ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
-                  {animal.status}
+                <div className={`flex items-center gap-1.5 text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-transparent ${statusConfig.bgClass} ${statusConfig.textClass} ${animal.status === 'no_disponible' ? '!border-[#FFE2C2]' : ''}`}>
+                  {statusConfig.icon}
+                  {statusConfig.label}
                 </div>
               </div>
+              <div className={`animal-card-status-divider animal-card-status-divider--${animal.status} !ml-0 mb-6 w-[72px]`}></div>
 
               <p className="text-[#5F6B70] text-lg mb-8 leading-relaxed max-w-2xl">
                 {animal.observation || `Descubre a ${animal.name}, ¡está buscando un hogar lleno de amor!`}
@@ -216,27 +350,27 @@ export default function AnimalDetailPage() {
                   <div className="flex items-center gap-1.5 text-[#5F6B70] text-xs font-semibold mb-1 uppercase tracking-wider">
                     <Calendar size={16} className="text-[#F69222]" /> Rango edad
                   </div>
-                  <div className="text-[#153970] font-bold">{animal.ageRange || '-'} años</div>
+                  <div className="text-[#153970] font-bold">{animal.age || '-'}</div>
                 </div>
 
                 <div className="bg-[#FDF3E7] rounded-2xl p-3 border border-[#F1D9BD]">
                   <div className="flex items-center gap-1.5 text-[#5F6B70] text-xs font-semibold mb-1 uppercase tracking-wider">
                     <Ruler size={16} className="text-[#F69222]" /> Tamaño
                   </div>
-                  <div className="text-[#153970] font-bold">{animal.size || 'No especificado'}</div>
+                  <div className="text-[#153970] font-bold">{animal.size === 'No especificado' ? 'No especificado' : animal.size?.charAt(0).toUpperCase() + animal.size?.slice(1).toLowerCase()}</div>
                 </div>
 
                 {/* Health Chips */}
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-1 flex items-center justify-between">
-                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">Esterilizado</span>
+                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.sterilized}</span>
                   {animal.sterilized === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-1 flex items-center justify-between">
-                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">Vacunado</span>
+                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.vaccinated}</span>
                   {animal.vaccinated === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-2 flex items-center justify-between">
-                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">Desparasitado</span>
+                  <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.dewormed}</span>
                   {animal.dewormed === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
 
@@ -244,22 +378,25 @@ export default function AnimalDetailPage() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <Button 
-                  variant="primary" 
-                  className={`flex-1 rounded-full py-4 text-lg shadow-md flex items-center justify-center gap-2 ${!isAvailable ? '!bg-[#FFEBEE] !text-[#E86F61] border border-[#FFCDD2] cursor-not-allowed hover:!bg-[#FFEBEE]' : ''}`}
-                  onClick={() => {
-                    if (isAvailable) {
-                      if (!isLoggedIn) {
-                        alert('Por favor inicia sesión o regístrate para continuar con el proceso de adopción.');
-                      } else {
-                        setIsAdoptionModalOpen(true);
-                      }
-                    }
-                  }}
-                >
-                  <PawPrint size={20} />
-                  {animal.detailCta}
-                </Button>
+                {canAdopt ? (
+                  <Button 
+                    variant="primary" 
+                    className="flex-1 rounded-full py-4 text-lg shadow-md flex items-center justify-center gap-2"
+                    onClick={() => setIsAdoptionModalOpen(true)}
+                  >
+                    <PawPrint size={20} />
+                    {animal.detailCta}
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="primary" 
+                    disabled
+                    className="flex-1 rounded-full py-4 text-lg shadow-md flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none bg-[#EAF4F5] text-[#5F6B70] border-none"
+                  >
+                    <PawPrint size={20} />
+                    {adoptionBlockedMessages[animal.status] || 'No disponible para adopción'}
+                  </Button>
+                )}
                 
                 <Button 
                   variant="outline" 
@@ -298,7 +435,7 @@ export default function AnimalDetailPage() {
             <div className="relative z-10">
               <p className="text-[#5F6B70] leading-relaxed">{animal.observation || `${animal.name} está esperando pacientemente a su familia definitiva.`}</p>
               <p className="mt-4 text-[#F69222] font-semibold">
-                Al adoptar a {animal.name}, le das una segunda oportunidad y ganas un compañero fiel para toda la vida.
+                {getAnimalEmotionalPhrase(animal)}
               </p>
             </div>
           </div>
@@ -354,7 +491,7 @@ export default function AnimalDetailPage() {
           src={doodleEsquinaInferiorDerecha.src} 
           alt="" 
           aria-hidden="true" 
-          className="absolute -bottom-10 -right-10 md:-bottom-16 md:-right-16 lg:-bottom-24 lg:-right-24 xl:-bottom-28 xl:-right-28 w-40 sm:w-56 md:w-64 lg:w-[320px] xl:w-[380px] opacity-30 pointer-events-none select-none z-0 block"
+          className="absolute -bottom-10 -right-10 md:-bottom-16 md:-right-16 lg:-bottom-24 lg:-right-24 xl:-bottom-28 xl:-right-28 w-40 sm:w-56 md:w-64 lg:w-[320px] xl:w-[380px] pointer-events-none select-none z-0 block"
         />
       </div>
 
@@ -368,7 +505,6 @@ export default function AnimalDetailPage() {
         }}
         onSubmit={handleAdoptionSubmit}
         animal={animal}
-        user={isLoggedIn ? mockUser : null}
         loading={isAdoptionLoading}
         error={adoptionError}
       />

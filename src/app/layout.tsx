@@ -25,7 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={`${inter.variable}`}>
-      <body className="font-inter font-sans">{children}</body>
+      <body className="font-inter font-sans">
+        <div className="w-full overflow-x-hidden">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

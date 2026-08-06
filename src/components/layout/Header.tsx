@@ -7,10 +7,13 @@ import { Button } from '../ui/Button';
 import { PawPrint, HandCoins } from 'lucide-react';
 import Image from 'next/image';
 import logoImg from '@/assets/logos/isologo/01_isologo_color_primario_transparente.png';
+import logotipoImg from '@/assets/ilustraciones/doodles/user/logotipo.png';
 import doodleHuesitos from '@/assets/ilustraciones/doodles/doodle_huesitos.png';
 import { DonationModal } from '../organisms/DonationModal';
 import { DonationSuccessModal } from '../organisms/DonationSuccessModal';
 import { DonationErrorModal } from '../organisms/DonationErrorModal';
+import { DonationsService } from '@/core/services/donations.service';
+import { HttpError } from '@/core/api/http-client';
 
 export const Header = () => {
   const pathname = usePathname();
@@ -32,16 +35,29 @@ export const Header = () => {
     setDonationLoading(true);
     setDonationError(null);
     try {
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      // throw new Error("Test error"); // Forzando el error para probar el Sad Path
-      console.log('Donación registrada:', data);
+      console.log('Donation request real payload:', data);
+      await DonationsService.submitOffer(data);
+      
+      // Success path
       setIsDonationModalOpen(false);
       setIsDonationSuccessModalOpen(true);
-      setDonationFormKey(prev => prev + 1);
-    } catch (err) {
-      setIsDonationModalOpen(false);
-      setIsDonationErrorModalOpen(true);
+      setDonationFormKey(prev => prev + 1); // Resets form
+    } catch (err: any) {
+      console.error('Error submitting donation:', err);
+      
+      if (err instanceof HttpError && err.statusCode === 400) {
+        // Error de validación del backend: mantenemos el modal abierto
+        const backendMessage = typeof err.data?.message === 'string' 
+          ? err.data.message 
+          : Array.isArray(err.data?.message) 
+            ? err.data.message.join(', ') 
+            : 'Error de validación del servidor.';
+        setDonationError(backendMessage);
+      } else {
+        // Error 500 o de red: cerramos modal y mostramos error modal
+        setIsDonationModalOpen(false);
+        setIsDonationErrorModalOpen(true);
+      }
     } finally {
       setDonationLoading(false);
     }
@@ -138,12 +154,13 @@ export const Header = () => {
 
         {/* Mobile Text (Absolutely Centered) */}
         <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none sm:hidden z-0">
-          <span className="font-extrabold text-[#153970] text-[16px] leading-tight text-center pointer-events-auto">Patitas</span>
-          <span className={`font-semibold text-[#5F6B70] text-[13px] leading-tight text-center overflow-hidden transition-all duration-500 ease-in-out pointer-events-auto ${
-            isScrolled ? 'max-h-[20px] opacity-100 mt-0.5' : 'max-h-0 opacity-0 mt-0'
-          }`}>
-            Caminando
-          </span>
+          <img 
+            src={logotipoImg.src} 
+            alt="Patitas Caminando" 
+            className={`w-auto pointer-events-auto transition-all duration-300 ease-in-out ${
+              isScrolled ? 'h-6' : 'h-8'
+            }`} 
+          />
         </div>
 
         <nav className="hidden md:flex items-center gap-8 font-medium relative z-10">

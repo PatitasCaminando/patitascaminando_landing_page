@@ -58,3 +58,75 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  animation: gradient-x 3s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 12s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Scrollbar personalizado para sliders */
+.brand-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+.brand-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-bg-cream);
+  border-radius: 10px;
+}
+.brand-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-primary);
+  border-radius: 10px;
+}
+.brand-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-dark);
+}
+.brand-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) var(--color-bg-cream);
+}
+
+/* Divisor de estado decorativo para cards */
+.animal-card-status-divider {
+  width: 96px;
+  height: 3px;
+  border-radius: 999px;
+  margin: 0 auto 16px;
+  opacity: 0.9;
+}
+.animal-card-status-divider--disponible { background: linear-gradient(90deg, transparent, #4CA456, transparent); }
+.animal-card-status-divider--en_proceso { background: linear-gradient(90deg, transparent, #62D9D9, transparent); }
+.animal-card-status-divider--adoptado { background: linear-gradient(90deg, transparent, #8A969B, transparent); }
+.animal-card-status-divider--no_disponible { background: linear-gradient(90deg, transparent, #F69222, transparent); }
+.animal-card-status-divider--archivado { background: linear-gradient(90deg, transparent, #8A969B, transparent); }

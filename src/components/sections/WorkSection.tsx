@@ -48,7 +48,7 @@ export const WorkSection = () => {
   ];
 
   return (
-    <section id="labor" className="relative pt-20 pb-[22rem] md:pb-36 px-4 bg-[#FFF7EA] overflow-hidden">
+    <section id="labor" className="relative pt-20 pb-32 md:pb-36 px-4 bg-[#FFF7EA] overflow-hidden">
       {/* Gatito Izquierdo */}
       <img 
         src={doodleCat.src} 

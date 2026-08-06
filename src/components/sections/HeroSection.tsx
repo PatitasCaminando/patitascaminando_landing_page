@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/Button';
 import { AlertReportModal } from '../organisms/AlertReportModal';
-import { PawPrint, Heart, HeartHandshake, Home } from 'lucide-react';
+import { PawPrint, Heart, HeartHandshake, Home, Info } from 'lucide-react';
 
 import dogHeroImg from '@/assets/perritos/perrito4.jpg';
 import doodleTopLeft from '@/assets/ilustraciones/doodles/doodle_marca_esquinero_superior_izquierdo.png';
@@ -22,7 +22,7 @@ export const HeroSection = () => {
       title: <>Tu ayuda <br /> cambia vidas</>,
       text: 'Cada aporte de alimento, insumos o difusión nos permite seguir rescatando, cuidando y acompañando a animalitos en situación de vulnerabilidad.',
       icon: PawPrint,
-      cta: { text: 'Conócenos', href: '#sobre' }
+      cta: { text: 'Conócenos', href: '/publicaciones/sobre-patitas-caminando', icon: Info }
     },
     {
       title: 'Caminamos con la comunidad',
@@ -142,7 +142,8 @@ export const HeroSection = () => {
 
               {slides[activeSlide].cta && (
                 <Link href={slides[activeSlide].cta.href}>
-                  <Button variant="primary" size="sm" className="w-full py-3 mb-2">
+                  <Button variant="primary" size="sm" className="w-full py-3 mb-2 flex items-center justify-center gap-2">
+                    {slides[activeSlide].cta.icon && React.createElement(slides[activeSlide].cta.icon, { size: 18 })}
                     {slides[activeSlide].cta.text}
                   </Button>
                 </Link>
