@@ -41,8 +41,25 @@ export const splitFullName = (fullName: string): { firstNames: string; lastNames
 export const mapDonationFormToDTO = (formData: UIDonationForm): CreateDonationOfferDTO => {
   const { firstNames, lastNames } = splitFullName(formData.nombreCompleto);
 
-  // Mapear los items seleccionados para asegurar que coincidan con DonationItem
-  const selectedItems = formData.itemsSeleccionados as DonationItem[];
+  // Mapping object based on DB constraint chk_donation_allowed_items
+  const itemsMap: Record<string, DonationItem | string> = {
+    'Alimento para perros': 'alimento_perros',
+    'Alimento para gatos': 'alimento_gatos',
+    'Medicinas': 'medicinas',
+    'Productos de higiene': 'productos_higiene',
+    'Utensilios de limpieza': 'utensilios_limpieza',
+    'Camas': 'camas',
+    'Mantas': 'mantas',
+    'Juguetes': 'juguetes',
+    'Correas': 'correas',
+    'Collares': 'collares',
+    'Platos': 'platos',
+    'Transportadoras': 'transportadoras',
+    'Otros': 'otros'
+  };
+
+  // Mapear los items seleccionados para asegurar que coincidan con DonationItem en DB
+  const selectedItems = formData.itemsSeleccionados.map(item => itemsMap[item] || item) as DonationItem[];
 
   return {
     firstNames,

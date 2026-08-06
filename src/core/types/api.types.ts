@@ -5,16 +5,17 @@ export interface AnimalDTO {
   name: string;
   species: AnimalSpecies | string;
   sex: AnimalSex | string;
-  approximate_age: AnimalAgeRange | string;
+  approximateAge: AnimalAgeRange | string;
   size: string;
   description: string;
-  general_condition: string;
-  photo_paths: string[];
+  generalCondition: string;
+  photoPaths: string[];
   status: AnimalStatus | string;
-  is_active: boolean;
-  is_publicly_visible: boolean;
-  created_at?: string;
-  updated_at?: string;
+  isActive: boolean;
+  isPubliclyVisible: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  images?: any[];
 }
 
 export interface CreateAdoptionApplicationDTO {

@@ -12,7 +12,7 @@ import naniImg from '@/assets/perritos/foto_pura/mani.png';
 
 export const featuredAnimals: Animal[] = [
   {
-    id: '1',
+    id: '11111111-1111-4111-a111-111111111111',
     name: 'Los Bonitos',
     slug: 'los-bonitos',
     category: 'Ambos',
@@ -30,7 +30,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Los Bonitos fueron encontrados juntos y desde entonces son inseparables. Buscan un hogar que esté dispuesto a darles el doble de amor, ya que disfrutan mucho de la compañía mutua. Son juguetones, cariñosos y excelentes compañeros.'
   },
   {
-    id: '2',
+    id: '22222222-2222-4222-a222-222222222222',
     name: 'Merlino',
     slug: 'merlino',
     category: 'Gato',
@@ -48,7 +48,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Merlino es un gatito muy curioso y explorador. Actualmente se encuentra en recuperación médica, por lo que su proceso de adopción está pausado temporalmente. Pronto estará listo para ronronear en su nuevo hogar.'
   },
   {
-    id: '3',
+    id: '33333333-3333-4333-a333-333333333333',
     name: 'Pompon',
     slug: 'pompon',
     category: 'Perra',
@@ -66,7 +66,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Pompón es una perrita senior llena de ternura. Es muy tranquila, le encanta dormir en lugares suavecitos y dar paseos cortos. Es ideal para una familia relajada que busque una compañera dulce y leal.'
   },
   {
-    id: '4',
+    id: '44444444-4444-4444-a444-444444444444',
     name: 'Tito',
     slug: 'tito',
     category: 'Gato',
@@ -84,7 +84,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Tito fue rescatado de una situación de riesgo. Actualmente está recibiendo mucho amor y cuidados en su hogar temporal para volver a confiar en los humanos. Aún no está listo para ser adoptado.'
   },
   {
-    id: '5',
+    id: '55555555-5555-4555-a555-555555555555',
     name: 'Vera',
     slug: 'vera',
     category: 'Gata',
@@ -102,7 +102,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Vera es una gatita muy juguetona e inteligente. Le encantan los juguetes de plumas y recibir caricias cuando ella lo decide. Buscará tu atención con maullidos dulces. Ideal para departamentos.'
   },
   {
-    id: '6',
+    id: '66666666-6666-4666-a666-666666666666',
     name: 'Balto',
     slug: 'balto',
     category: 'Perro',
@@ -120,7 +120,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Balto es un perrito noble y lleno de energía que está listo para encontrar una familia que lo ame para siempre. Fue rescatado de la calle y ahora sueña con un hogar seguro donde pueda dar y recibir mucho amor. Cariñoso, juguetón y sociable. Le encanta correr, jugar con otros perros y recibir caricias.'
   },
   {
-    id: '7',
+    id: '77777777-7777-4777-a777-777777777777',
     name: 'Ceres',
     slug: 'ceres',
     category: 'Gata',
@@ -138,7 +138,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Ceres es una gatita muy elegante y tranquila. Le gusta observar por la ventana y dormir al sol. Es un poco tímida al principio, pero muy leal una vez que entra en confianza con su familia.'
   },
   {
-    id: '8',
+    id: '88888888-8888-4888-a888-888888888888',
     name: 'Teo',
     slug: 'teo',
     category: 'Perro',
@@ -156,7 +156,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Teo es muy inteligente y protector. Ya sabe varias órdenes básicas y responde bien al entrenamiento positivo. Necesita dueños activos que disfruten de caminatas largas.'
   },
   {
-    id: '9',
+    id: '99999999-9999-4999-a999-999999999999',
     name: 'Shagui',
     slug: 'shagui',
     category: 'Perro',
@@ -174,7 +174,7 @@ export const featuredAnimals: Animal[] = [
     observation: 'Shagui es un perrito muy alegre y sociable. Tiene un pelaje hermoso que requiere un poco de cepillado. Es el compañero perfecto para familias con niños.'
   },
   {
-    id: '10',
+    id: 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa',
     name: 'Nani',
     slug: 'nani',
     category: 'Perra',

@@ -1,21 +1,16 @@
 import { CreateDonationOfferDTO } from '../types/api.types';
+import { httpClient } from '../api/http-client';
 
 /**
- * Servicio preparado para el envío de ofrecimientos de donación al API NestJS.
- * IMPORTANTE: Actualmente no se está llamando al endpoint real en la UI,
- * esto es preparación arquitectónica para la siguiente fase.
+ * Servicio conectado al API NestJS local para enviar ofrecimientos de donación.
  */
 export const DonationsService = {
   /**
-   * Envía un nuevo ofrecimiento de donación.
-   * Endpoint futuro: POST /public/donations/offers
+   * Envía una nueva oferta de donación.
+   * Endpoint: POST /public/donations/offers
    */
   submitOffer: async (payload: CreateDonationOfferDTO): Promise<any> => {
-    // TODO: Implementar llamada real (ej. fetch o axios.post('/public/donations/offers', payload))
-    console.warn('DonationsService.submitOffer no está conectado al backend real.');
-    console.log('Payload que se enviará en el futuro:', payload);
-    
-    // Simular un retardo y respuesta exitosa
-    return new Promise((resolve) => setTimeout(() => resolve({ success: true }), 1000));
+    // Usamos el cliente HTTP para hacer el POST al endpoint público sin token.
+    return httpClient.post('/public/donations/offers', payload);
   }
 };

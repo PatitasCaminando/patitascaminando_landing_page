@@ -8,6 +8,7 @@ import { FormErrorMessage } from '../atoms/FormErrorMessage';
 import { CircularShadowImage } from '../atoms/CircularShadowImage';
 import { StatusAlert } from '../molecules/StatusAlert';
 import doodleDonacion from '@/assets/ilustraciones/doodles/donation/doodle_donacion.png';
+import { mapDonationFormToDTO, UIDonationForm } from '@/core/mappers/donation.mapper';
 
 export interface DonationModalProps {
   isOpen: boolean;
@@ -62,6 +63,24 @@ export const DonationModal: React.FC<DonationModalProps> = ({
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, loading, onClose]);
 
+  // Manejo de errores desde el backend (400 Bad Request) pasados a través del prop `error`
+  useEffect(() => {
+    if (error) {
+      const lowerError = error.toLowerCase();
+      const newErrors: Record<string, string> = { ...validationErrors };
+      
+      if (lowerError.includes('email must be an email')) {
+        newErrors.correo = 'Ingresa un correo electrónico válido.';
+      }
+      
+      if (lowerError.includes('chk_donation_allowed_items')) {
+        newErrors.global = 'Uno de los tipos de donación seleccionados no es válido. Intenta seleccionar nuevamente las opciones.';
+      }
+      
+      setValidationErrors(newErrors);
+    }
+  }, [error]);
+
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -109,18 +128,38 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
   const validate = () => {
     const errors: Record<string, string> = {};
-    if (!formData.nombres.trim()) errors.nombres = 'Ingresa tus nombres y apellidos.';
-    if (!formData.telefono.trim()) errors.telefono = 'Ingresa tu teléfono o WhatsApp.';
-    if (!formData.correo.trim()) errors.correo = 'Ingresa tu correo electrónico.';
+    if (!formData.nombres.trim()) {
+      errors.nombres = 'Ingresa tus nombres y apellidos.';
+    } else {
+      const words = formData.nombres.trim().split(/\s+/);
+      if (words.length < 2) {
+        errors.nombres = 'Ingresa al menos un nombre y un apellido.';
+      }
+    }
+    
+    const phoneRegex = /^[0-9+\-\s()]{7,15}$/;
+    if (!formData.telefono.trim()) {
+      errors.telefono = 'Ingresa un número de teléfono o WhatsApp.';
+    } else if (!phoneRegex.test(formData.telefono.trim())) {
+      errors.telefono = 'Ingresa un teléfono válido para coordinar la donación.';
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.correo.trim()) {
+      errors.correo = 'Ingresa tu correo electrónico.';
+    } else if (!emailRegex.test(formData.correo.trim())) {
+      errors.correo = 'Ingresa un correo electrónico válido.';
+    }
+    
     if (formData.tipoDonacion.length === 0) errors.tipoDonacion = 'Selecciona al menos un tipo de donación.';
     if (!formData.detalle.trim()) {
       if (formData.tipoDonacion.includes('Otros')) {
-        errors.detalle = 'Describe la ayuda, ya que seleccionaste "Otros".';
+        errors.detalle = 'Indica en el detalle qué otro tipo de ayuda deseas donar.';
       } else {
         errors.detalle = 'Describe brevemente qué deseas donar.';
       }
     }
-    if (!formData.aceptacionDatos) errors.aceptacionDatos = 'Debes aceptar los términos para continuar.';
+    if (!formData.aceptacionDatos) errors.aceptacionDatos = 'Debes aceptar el uso de tus datos para coordinar esta donación.';
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -129,7 +168,18 @@ export const DonationModal: React.FC<DonationModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onSubmit(formData);
+      const uiForm: UIDonationForm = {
+        nombreCompleto: formData.nombres,
+        telefono: formData.telefono,
+        email: formData.correo,
+        itemsSeleccionados: formData.tipoDonacion,
+        descripcion: formData.detalle,
+        detalleOtros: formData.tipoDonacion.includes('Otros') ? formData.detalle : undefined,
+        aceptacionDatos: formData.aceptacionDatos,
+      };
+
+      const mappedData = mapDonationFormToDTO(uiForm);
+      onSubmit(mappedData);
     }
   };
 
@@ -188,6 +238,13 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
             <div className="flex-1 overflow-y-auto px-1 pb-2">
               <form onSubmit={handleSubmit} noValidate className="text-left space-y-5">
+              
+                {validationErrors.global && (
+                  <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm mb-6 flex items-start gap-3">
+                    <X className="shrink-0 mt-0.5" size={16} />
+                    <p>{validationErrors.global}</p>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   {/* Nombres */}

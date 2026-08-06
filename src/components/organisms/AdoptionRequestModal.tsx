@@ -11,6 +11,7 @@ import { Animal } from '@/types';
 
 import doodlePatitasEsquineras from '@/assets/ilustraciones/doodles/doodle_patitas_esquineras_izquierda_superior.png';
 import doodleNubesIzquierda from '@/assets/ilustraciones/doodles/doodle_patitas_esquineras_derecha_inferior.png';
+import { mapAdoptionFormToDTO } from '@/core/mappers/adoption.mapper';
 
 export interface AdoptionRequestModalProps {
   isOpen: boolean;
@@ -71,6 +72,22 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose, loading]);
+
+  // Manejo de errores desde el backend (400 Bad Request)
+  useEffect(() => {
+    if (error) {
+      const lowerError = error.toLowerCase();
+      const newErrors: Record<string, string> = { ...validationErrors };
+      
+      if (lowerError.includes('email must be an email')) {
+        newErrors.correo = 'Ingresa un correo electrónico válido.';
+      } else {
+        newErrors.global = typeof error === 'string' ? error : 'Revisa los datos ingresados e intenta nuevamente.';
+      }
+      
+      setValidationErrors(newErrors);
+    }
+  }, [error]);
 
   if (!isOpen || !animal) return null;
 
@@ -136,18 +153,20 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
       return;
     }
 
-    // Build the mapped data object for the backend
-    const mappedData = {
-      first_names: formData.nombres,
-      last_names: formData.apellidos,
-      phone: formData.telefono,
-      email: formData.correo,
-      adoption_reason: formData.motivo,
-      specific_animal_id: animal.id,
-      data_processing_accepted: formData.aceptacionDatos,
-      desired_animal_description: `Me interesa adoptar a ${animal.name}.`,
-      additional_message: `Dirección domiciliaria: ${formData.direccion}\nEdad: ${formData.edad}\nTipo de vivienda: ${formData.tipoVivienda}\nDetalle del inmueble: ${formData.detalleInmueble || 'N/A'}`
+    // Build the mapped data object for the backend using the mapper
+    const uiForm = {
+      nombres: formData.nombres,
+      apellidos: formData.apellidos,
+      telefono: formData.telefono,
+      email: formData.correo, // Map correo to email
+      motivoAdopcion: formData.motivo, // Map motivo to motivoAdopcion
+      direccion: formData.direccion,
+      edad: formData.edad,
+      tipoVivienda: formData.tipoVivienda,
+      detalleInmueble: formData.detalleInmueble,
+      aceptacionDatos: formData.aceptacionDatos,
     };
+    const mappedData = mapAdoptionFormToDTO(uiForm, animal.id, animal.name);
 
     onSubmit(mappedData);
   };
@@ -214,6 +233,13 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
           <div className="flex-1 overflow-y-auto px-6 md:px-10 py-6">
             <form id="adoption-form" onSubmit={handleSubmit} className="space-y-5">
               
+              {validationErrors.global && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm mb-6 flex items-start gap-3">
+                  <X className="shrink-0 mt-0.5" size={16} />
+                  <p>{validationErrors.global}</p>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Nombres */}
                 <div>
