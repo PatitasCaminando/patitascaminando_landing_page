@@ -357,7 +357,7 @@ export default function AnimalDetailPage() {
                   <div className="flex items-center gap-1.5 text-[#5F6B70] text-xs font-semibold mb-1 uppercase tracking-wider">
                     <Ruler size={16} className="text-[#F69222]" /> Tamaño
                   </div>
-                  <div className="text-[#153970] font-bold">{animal.size === 'No especificado' ? 'No especificado' : animal.size?.charAt(0).toUpperCase() + animal.size?.slice(1).toLowerCase()}</div>
+                  <div className="text-[#153970] font-bold">{animal.size && animal.size !== 'No especificado' ? animal.size.charAt(0).toUpperCase() + animal.size.slice(1).toLowerCase() : 'No especificado'}</div>
                 </div>
 
                 {/* Health Chips */}
