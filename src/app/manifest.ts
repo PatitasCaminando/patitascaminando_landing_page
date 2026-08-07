@@ -11,19 +11,25 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#F4A261',
     icons: [
       {
-        src: '/pwa-images/android/launchericon-192x192.png',
+        src: '/favicon-rounded.png',
         sizes: '192x192',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/pwa-images/android/launchericon-512x512.png',
+        src: '/favicon-rounded.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'maskable',
+      },
+      {
+        src: '/favicon-rounded.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'any',
       },
       {
-        src: '/pwa-images/android/launchericon-512x512.png',
+        src: '/favicon-rounded.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',

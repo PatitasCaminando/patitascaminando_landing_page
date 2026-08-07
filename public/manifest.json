@@ -10,22 +10,16 @@
   "theme_color": "#F69222",
   "icons": [
     {
-      "src": "/pwa-images/android/launchericon-192x192.png",
+      "src": "/favicon-rounded.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/pwa-images/android/launchericon-512x512.png",
+      "src": "/favicon-rounded.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/pwa-images/android/launchericon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ]
 }

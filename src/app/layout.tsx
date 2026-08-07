@@ -5,6 +5,7 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
 import { CacheConsentBottomSheet } from "@/components/pwa/CacheConsentBottomSheet";
 import { PWAInstallModal } from "@/components/pwa/PWAInstallModal";
+import PWAInstallWrapper from "@/components/pwa/PWAInstallWrapper";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -48,6 +49,7 @@ export default function RootLayout({
         </div>
         <ServiceWorkerRegister />
         <CacheConsentBottomSheet />
+        <PWAInstallWrapper />
         <PWAInstallModal />
       </body>
     </html>
