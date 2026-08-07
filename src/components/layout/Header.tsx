@@ -264,13 +264,14 @@ export const Header = () => {
         isOpen={isDonationSuccessModalOpen}
         onClose={() => setIsDonationSuccessModalOpen(false)}
       />
-      <DonationErrorModal
-        isOpen={isDonationErrorModalOpen}
+      <DonationErrorModal 
+        isOpen={isDonationErrorModalOpen} 
+        onClose={() => setIsDonationErrorModalOpen(false)} 
         onRetry={() => {
           setIsDonationErrorModalOpen(false);
           setIsDonationModalOpen(true);
         }}
-        onClose={() => setIsDonationErrorModalOpen(false)}
+        isOfflineState={typeof navigator !== 'undefined' && !navigator.onLine}
       />
     </>
   );

@@ -77,7 +77,11 @@ export const FeaturedAdoptionsSection = () => {
       setTotalApiAnimals(response.total || response.items.length);
     } catch (error: any) {
       console.error('Error fetching animals:', error);
-      setErrorMsg(error.message || 'Error fetching animals');
+      if (typeof navigator !== 'undefined' && !navigator.onLine) {
+        setErrorMsg('OFFLINE_ERROR');
+      } else {
+        setErrorMsg(error.message || 'Error fetching animals');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -111,11 +115,7 @@ export const FeaturedAdoptionsSection = () => {
         const sex = (animal.sex || '').toLowerCase();
         const fSex = filters.sexo.toLowerCase();
         
-        if (fSex === 'hembra y macho') {
-          matchSexo = sex === 'ambos' || sex === 'hembra y macho';
-        } else {
-          matchSexo = sex === fSex;
-        }
+        matchSexo = sex === fSex;
       }
 
       // Edad Filter
@@ -238,7 +238,6 @@ export const FeaturedAdoptionsSection = () => {
                 <option value="Todos">Todos</option>
                 <option value="Macho">Macho</option>
                 <option value="Hembra">Hembra</option>
-                <option value="Hembra y macho">Hembra y macho</option>
               </select>
             </div>
 
@@ -286,7 +285,15 @@ export const FeaturedAdoptionsSection = () => {
           </div>
         ) : errorMsg ? (
           <div className="py-10">
-            <ApiErrorState onRetry={fetchAnimals} />
+            {errorMsg === 'OFFLINE_ERROR' ? (
+              <ApiErrorState 
+                onRetry={fetchAnimals}
+                title="Sin conexión"
+                message="No pudimos cargar esta información porque no hay conexión y aún no existe una versión guardada."
+              />
+            ) : (
+              <ApiErrorState onRetry={fetchAnimals} />
+            )}
           </div>
         ) : currentAnimals.length === 0 ? (
           <div className="py-10">

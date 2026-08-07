@@ -38,7 +38,7 @@ export const OfflineBanner = () => {
   }
 
   return (
-    <div className="fixed top-[70px] md:top-[80px] left-0 right-0 z-40 px-4 pointer-events-none">
+    <div className="fixed top-[100px] md:top-[120px] left-0 right-0 z-40 px-4 pointer-events-none">
       <div className="max-w-2xl mx-auto mt-4 pointer-events-auto bg-[#612758] text-white p-3 md:p-4 rounded-2xl shadow-patitas flex items-center justify-between gap-4 animate-[slideDown_0.3s_ease-out_forwards]">
         <div className="flex items-center gap-3">
           <div className="bg-white/20 p-2 rounded-xl shrink-0">
@@ -46,7 +46,7 @@ export const OfflineBanner = () => {
           </div>
           <div>
             <h4 className="font-bold text-sm md:text-base leading-tight mb-0.5">Sin conexión a internet</h4>
-            <p className="text-white/80 text-xs md:text-sm">Estás navegando en modo offline. Alguna información podría no estar actualizada.</p>
+            <p className="text-white/80 text-xs md:text-sm">Estás navegando sin conexión. Te mostramos la última información guardada en este dispositivo.</p>
           </div>
         </div>
         <button 

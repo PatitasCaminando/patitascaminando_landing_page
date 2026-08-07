@@ -130,3 +130,10 @@
 .animal-card-status-divider--adoptado { background: linear-gradient(90deg, transparent, #8A969B, transparent); }
 .animal-card-status-divider--no_disponible { background: linear-gradient(90deg, transparent, #F69222, transparent); }
 .animal-card-status-divider--archivado { background: linear-gradient(90deg, transparent, #8A969B, transparent); }
+
+@layer utilities {
+  .font-brand {
+    font-family: var(--font-brand), var(--font-sans);
+    line-height: 1.08;
+  }
+}

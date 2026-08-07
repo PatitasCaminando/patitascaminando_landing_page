@@ -1,5 +1,6 @@
 import React from 'react';
 import Image, { StaticImageData } from 'next/image';
+import { WifiOff } from 'lucide-react';
 
 export type ShadowColorVariant = 'orange' | 'blue' | 'green' | 'turquoise' | 'none';
 
@@ -22,6 +23,8 @@ export const CircularShadowImage: React.FC<CircularShadowImageProps> = ({
   width = 300,
   height = 300
 }) => {
+  const [hasError, setHasError] = React.useState(false);
+
   const shadows = {
     orange: 'shadow-[0_10px_25px_-5px_rgba(246,146,34,0.4)]',
     blue: 'shadow-[0_10px_25px_-5px_rgba(21,57,112,0.4)]',
@@ -29,6 +32,14 @@ export const CircularShadowImage: React.FC<CircularShadowImageProps> = ({
     turquoise: 'shadow-[0_18px_45px_rgba(98,217,217,0.22)]',
     none: 'shadow-none'
   };
+
+  if (hasError || !src) {
+    return (
+      <div className={`flex items-center justify-center bg-gray-50 border-2 border-dashed border-gray-200 rounded-full relative overflow-hidden ${containerClassName}`}>
+        <WifiOff size={40} className="text-gray-300" />
+      </div>
+    );
+  }
 
   return (
     <div className={`flex items-end justify-center bg-white rounded-full relative overflow-hidden ${shadows[shadowColor]} ${containerClassName}`}>
@@ -38,6 +49,7 @@ export const CircularShadowImage: React.FC<CircularShadowImageProps> = ({
         width={width} 
         height={height}
         className={`object-contain drop-shadow-sm ${imageClassName}`}
+        onError={() => setHasError(true)}
       />
     </div>
   );

@@ -62,14 +62,14 @@ export const HeroSection = () => {
         src={doodleTopLeft.src}
         alt=""
         aria-hidden="true"
-        className="absolute top-0 left-0 w-32 md:w-48 lg:w-64 xl:w-72 opacity-60 sm:opacity-80 pointer-events-none select-none z-0 block"
+        className="absolute top-0 left-0 w-32 md:w-48 lg:w-64 xl:w-72 opacity-100 pointer-events-none select-none z-0 block"
       />
 
       <img
         src={doodleBottomRight.src}
         alt=""
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-32 md:w-48 lg:w-64 xl:w-[320px] opacity-60 md:opacity-80 pointer-events-none select-none z-0 block"
+        className="absolute bottom-0 right-0 w-32 md:w-48 lg:w-64 xl:w-[320px] opacity-100 pointer-events-none select-none z-0 block"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl flex flex-col lg:flex-row items-center gap-12 lg:gap-14">

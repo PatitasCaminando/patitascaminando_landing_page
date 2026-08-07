@@ -69,7 +69,7 @@ export const DonationSuccessModal: React.FC<DonationSuccessModalProps> = ({
           />
         </div>
 
-        <h3 className="text-3xl font-extrabold text-[#153970] mb-4">
+        <h3 className="text-3xl font-extrabold text-[#153970] mb-4 font-brand">
           ¡Donación enviada con éxito!
         </h3>
         

@@ -35,12 +35,12 @@ export const ScrollToTop = () => {
   return (
     <button
       onClick={scrollToTop}
-      className={`fixed bottom-8 right-8 md:bottom-10 md:right-10 p-3 md:p-4 rounded-full bg-white text-[#F69222] border-2 border-[#F69222] shadow-patitas transition-all duration-300 hover:bg-[#FFE2C2] hover:-translate-y-1 z-50 ${
+      className={`fixed bottom-[96px] right-6 md:bottom-10 md:right-10 p-2.5 md:p-4 rounded-full bg-white text-[#F69222] border-2 border-[#F69222] shadow-patitas transition-all duration-300 hover:bg-[#FFE2C2] hover:-translate-y-1 z-40 flex items-center justify-center w-11 h-11 md:w-auto md:h-auto ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
       }`}
       aria-label="Volver arriba"
     >
-      <ArrowUp size={24} />
+      <ArrowUp className="w-5 h-5 md:w-6 md:h-6" />
     </button>
   );
 };

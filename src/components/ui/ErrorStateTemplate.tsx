@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from './Button';
-import { ChevronLeft, RefreshCw } from 'lucide-react';
+import { ChevronLeft, RefreshCw, WifiOff } from 'lucide-react';
 
 interface ErrorStateTemplateProps {
   title: string;
@@ -17,6 +17,7 @@ interface ErrorStateTemplateProps {
   onSecondaryAction?: () => void;
   isGlobal?: boolean;
   doodleClassName?: string;
+  isOfflineState?: boolean;
 }
 
 export const ErrorStateTemplate: React.FC<ErrorStateTemplateProps> = ({
@@ -30,16 +31,23 @@ export const ErrorStateTemplate: React.FC<ErrorStateTemplateProps> = ({
   secondaryActionHref,
   onSecondaryAction,
   isGlobal = false,
-  doodleClassName
+  doodleClassName,
+  isOfflineState = false
 }) => {
   const content = (
     <div className="flex-1 flex flex-col items-center justify-center text-center max-w-2xl mx-auto w-full px-4 relative z-10 py-16">
       <div className="mb-4 relative flex justify-center w-full z-10">
-        <img 
-          src={doodleSrc} 
-          alt="Error illustration" 
-          className={doodleClassName || "w-64 sm:w-80 md:w-96 max-w-full drop-shadow-sm pointer-events-none"}
-        />
+        {isOfflineState ? (
+          <div className="flex items-center justify-center bg-[#FDF3E7] border-4 border-dashed border-[#F1D9BD] rounded-full p-10 sm:p-14 mb-8">
+            <WifiOff size={80} className="text-[#F69222]/50" strokeWidth={1.5} />
+          </div>
+        ) : (
+          <img 
+            src={doodleSrc} 
+            alt="Error illustration" 
+            className={doodleClassName || "w-64 sm:w-80 md:w-96 max-w-full drop-shadow-sm pointer-events-none"}
+          />
+        )}
       </div>
 
       <h2 className="mt-4 text-2xl md:text-3xl font-extrabold text-[#153970] mb-4">

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { X, RefreshCw } from 'lucide-react';
+import { X, RefreshCw, WifiOff } from 'lucide-react';
 import { Button } from '../ui/Button';
 import doodleAlerta from '@/assets/ilustraciones/doodles/adopt/doodle_perrito_alerta.png';
 
@@ -9,12 +9,14 @@ export interface AdoptionErrorModalProps {
   isOpen: boolean;
   onRetry: () => void;
   onClose: () => void;
+  isOfflineState?: boolean;
 }
 
 export const AdoptionErrorModal: React.FC<AdoptionErrorModalProps> = ({
   isOpen,
   onRetry,
   onClose,
+  isOfflineState = false,
 }) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -52,19 +54,27 @@ export const AdoptionErrorModal: React.FC<AdoptionErrorModalProps> = ({
         </button>
 
         <div className="flex justify-center mb-6 mt-2">
-          <img
-            src={doodleAlerta.src}
-            alt="Error en la solicitud"
-            className="w-56 h-56 md:w-64 md:h-64 object-contain drop-shadow-[0_15px_25px_rgba(246,146,34,0.4)] transform scale-[1.7] -translate-y-4"
-          />
+          {isOfflineState ? (
+            <div className="flex items-center justify-center bg-[#FDF3E7] border-4 border-dashed border-[#F1D9BD] rounded-full p-10 w-48 h-48 sm:w-56 sm:h-56">
+              <WifiOff size={80} className="text-[#F69222]/50" strokeWidth={1.5} />
+            </div>
+          ) : (
+            <img
+              src={doodleAlerta.src}
+              alt="Error en la solicitud"
+              className="w-56 h-56 md:w-64 md:h-64 object-contain drop-shadow-[0_15px_25px_rgba(246,146,34,0.4)] transform scale-[1.7] -translate-y-4"
+            />
+          )}
         </div>
 
         <h3 className="text-3xl font-extrabold text-[#153970] mb-4">
-          ¡Oops! Hubo un problema con esta solicitud
+          {isOfflineState ? "Sin conexión" : "¡Oops! Hubo un problema con esta solicitud"}
         </h3>
         
         <p className="text-[#5F6B70] text-lg font-semibold mb-2">
-          No pudimos registrar tu adopción en este momento. Revisa tu conexión o intenta nuevamente en unos segundos.
+          {isOfflineState 
+            ? "No pudimos registrar tu adopción porque no tienes conexión a internet." 
+            : "No pudimos registrar tu adopción en este momento. Revisa tu conexión o intenta nuevamente en unos segundos."}
         </p>
 
         <p className="text-[#5F6B70] text-base mb-8 leading-relaxed max-w-lg mx-auto">
@@ -73,7 +83,7 @@ export const AdoptionErrorModal: React.FC<AdoptionErrorModalProps> = ({
 
         <Button 
           onClick={onRetry} 
-          className="w-full text-lg py-4 !bg-[#F69222] hover:!bg-[#E0811B] text-white transition-colors border-none flex items-center justify-center gap-2"
+          className="w-full text-lg py-4 rounded-full !bg-[#F69222] hover:!bg-[#E0811B] text-white transition-colors border-none flex items-center justify-center gap-2"
         >
           <RefreshCw size={20} /> Reintentar
         </Button>

@@ -16,7 +16,7 @@ export const featuredAnimals: Animal[] = [
     name: 'Los Bonitos',
     slug: 'los-bonitos',
     category: 'Ambos',
-    sex: 'Hembra y macho',
+    sex: 'Hembra',
     age: '1 año',
     ageRange: '1-5',
     size: 'No especificado',

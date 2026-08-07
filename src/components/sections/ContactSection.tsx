@@ -41,7 +41,9 @@ export const ContactSection = () => {
                 </div>
                 <div className="pt-1">
                   <p className="font-bold text-[#153970]">Correo Electrónico</p>
-                  <p className="text-[#5F6B70] text-lg">patitascaminando33@gmail.com</p>
+                  <p className="text-[#5F6B70] text-[17px] md:text-lg break-words pr-2">
+                    patitascaminando33<wbr/>@gmail.com
+                  </p>
                 </div>
               </li>
               <li className="flex items-start gap-4">

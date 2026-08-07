@@ -76,7 +76,7 @@ export const AdoptionSuccessModal: React.FC<AdoptionSuccessModalProps> = ({
           />
         </div>
 
-          <h3 className="text-3xl font-extrabold text-[#153970] mb-4">
+          <h3 className="text-3xl font-extrabold text-[#153970] mb-4 font-brand">
             ¡Solicitud enviada con éxito!
           </h3>
           <p className="text-[#5F6B70] text-[17px] mb-8 leading-relaxed">

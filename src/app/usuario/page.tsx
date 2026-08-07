@@ -62,7 +62,7 @@ export default function MisSolicitudesPage() {
                     </div>
                     <div>
                       <h4 className="font-bold text-[#153970] text-base mb-0.5">Los Bonitos</h4>
-                      <p className="text-sm text-[#8A969B]">Hembra y Macho</p>
+                      <p className="text-sm text-[#8A969B]">Hembra</p>
                       <p className="text-sm text-[#8A969B]">1 año</p>
                     </div>
                   </div>
@@ -104,7 +104,7 @@ export default function MisSolicitudesPage() {
             </div>
             <div>
               <h4 className="font-bold text-[#153970] text-lg mb-0.5">Los Bonitos</h4>
-              <p className="text-sm text-[#8A969B]">Hembra y Macho</p>
+              <p className="text-sm text-[#8A969B]">Hembra</p>
               <p className="text-sm text-[#8A969B]">1 año</p>
             </div>
           </div>

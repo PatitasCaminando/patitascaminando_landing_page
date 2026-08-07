@@ -22,7 +22,7 @@ export const ArticleBody: React.FC<ArticleBodyProps> = ({ title, content }) => {
         src={doodleLampara.src} 
         alt="" 
         aria-hidden="true" 
-        className="absolute top-0 -left-4 md:-left-12 lg:-left-16 xl:-left-12 w-48 sm:w-56 md:w-80 lg:w-[320px] xl:w-[400px] opacity-15 md:opacity-40 pointer-events-none select-none z-0"
+        className="absolute -top-10 sm:top-0 -left-4 md:-left-12 lg:-left-16 xl:-left-12 w-28 sm:w-48 md:w-80 lg:w-[320px] xl:w-[400px] opacity-15 md:opacity-40 pointer-events-none select-none z-0"
       />
       
       {/* Lateral Decorativo (Solo Desktop) */}
@@ -30,7 +30,7 @@ export const ArticleBody: React.FC<ArticleBodyProps> = ({ title, content }) => {
         src={doodleLateralHuellas.src} 
         alt="" 
         aria-hidden="true" 
-        className="absolute top-1/4 md:top-1/3 -right-6 md:-right-12 w-56 sm:w-64 md:w-64 lg:w-[320px] xl:w-[400px] opacity-20 md:opacity-30 pointer-events-none select-none z-0"
+        className="absolute top-10 md:top-1/3 -right-6 md:-right-12 w-32 sm:w-56 md:w-64 lg:w-[320px] xl:w-[400px] opacity-20 md:opacity-30 pointer-events-none select-none z-0"
       />
 
       <Container size="md" className="relative z-10">

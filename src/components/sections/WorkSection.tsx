@@ -48,57 +48,57 @@ export const WorkSection = () => {
   ];
 
   return (
-    <section id="labor" className="relative pt-20 pb-32 md:pb-36 px-4 bg-[#FFF7EA] overflow-hidden">
+    <section id="labor" className="relative pt-20 pb-32 md:pb-36 px-4 bg-[#FFF7EA]">
       {/* Gatito Izquierdo */}
-      <img 
-        src={doodleCat.src} 
-        alt="" 
+      <img
+        src={doodleCat.src}
+        alt=""
         aria-hidden="true"
-        className="absolute bottom-0 left-0 md:-left-[2%] w-[160px] sm:w-[250px] md:w-[350px] lg:w-[420px] opacity-60 md:opacity-90 pointer-events-none select-none z-0" 
+        className="absolute -bottom-12 md:-bottom-16 left-0 md:-left-[2%] w-[160px] sm:w-[250px] md:w-[350px] lg:w-[420px] opacity-60 md:opacity-90 pointer-events-none select-none z-0"
       />
-      
+
       {/* Perrito Derecho */}
-      <img 
-        src={doodleDog.src} 
-        alt="" 
+      <img
+        src={doodleDog.src}
+        alt=""
         aria-hidden="true"
-        className="absolute bottom-0 right-0 md:-right-[2%] w-[160px] sm:w-[250px] md:w-[350px] lg:w-[420px] opacity-60 md:opacity-90 pointer-events-none select-none z-0" 
+        className="absolute bottom-10 md:-bottom-16 right-2 md:-right-[2%] w-[100px] sm:w-[200px] md:w-[350px] lg:w-[420px] opacity-60 md:opacity-90 pointer-events-none select-none z-0"
       />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        <SectionHeader 
-          title="Nuestra Labor" 
-          subtitle="Trabajamos junto a la comunidad para promover el cuidado, la protección y las segundas oportunidades para animales de compañía." 
+        <SectionHeader
+          title="Nuestra Labor"
+          subtitle="Trabajamos junto a la comunidad para promover el cuidado, la protección y las segundas oportunidades para animales de compañía."
         />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 md:gap-y-10 lg:gap-y-8 mt-12">
           {cards.map((card) => (
-            <div 
-              key={card.id} 
+            <div
+              key={card.id}
               className={`bg-white rounded-[32px] overflow-hidden shadow-patitas-sm hover:shadow-patitas-lg transition-all duration-300 border ${card.borderCard} hover:-translate-y-2 flex flex-col h-full group`}
             >
               {/* Imagen Protagonista */}
               <div className="relative w-full h-56 sm:h-64 bg-[#FDF3E7] shrink-0">
-                <img 
-                  src={card.image} 
-                  alt={card.title} 
+                <img
+                  src={card.image}
+                  alt={card.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              
+
               {/* Contenido con Badge Flotante */}
               <div className="relative pt-10 pb-8 px-8 flex flex-col flex-grow text-left bg-white">
-                
+
                 {/* Badge Flotante en la intersección de imagen y contenido */}
                 <div className={`absolute -top-7 left-8 w-14 h-14 rounded-full ${card.bgIcon} ${card.textIcon} flex items-center justify-center shadow-sm border-4 border-white z-10 transition-transform duration-300 group-hover:-translate-y-1`}>
                   {card.icon}
                 </div>
 
                 <h3 className="text-2xl font-extrabold text-[#153970] mb-3">{card.title}</h3>
-                
+
                 {/* Línea Acento Corto */}
-                <div 
-                  className="h-1.5 w-12 rounded-full mb-4 transition-all duration-300 group-hover:w-16" 
+                <div
+                  className="h-1.5 w-12 rounded-full mb-4 transition-all duration-300 group-hover:w-16"
                   style={{ backgroundColor: card.primaryColor }}
                 />
 

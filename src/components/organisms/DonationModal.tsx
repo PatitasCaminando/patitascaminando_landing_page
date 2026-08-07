@@ -51,7 +51,19 @@ export const DonationModal: React.FC<DonationModalProps> = ({
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   // El estado se inicializa en el useState. Si se requiere un reseteo completo,
-  // el componente padre debe cambiar el 'key' prop del componente.
+  const [isOffline, setIsOffline] = useState(false);
+
+  useEffect(() => {
+    setIsOffline(!navigator.onLine);
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -167,6 +179,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (validate()) {
       const uiForm: UIDonationForm = {
         nombreCompleto: formData.nombres,
@@ -213,7 +226,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
         )}
 
         {/* Form State */}
-        <div className="text-center flex flex-col max-h-[85vh]">
+        <div className="text-center flex flex-col overflow-y-auto max-h-[85vh] px-2 py-2">
           <div className="shrink-0">
               <div className="flex justify-center mb-6 mt-2">
                 <CircularShadowImage
@@ -227,18 +240,18 @@ export const DonationModal: React.FC<DonationModalProps> = ({
                 />
               </div>
 
-              <h3 className="text-3xl font-extrabold text-[#153970] mb-2">Donar</h3>
+              <h3 className="text-3xl font-extrabold text-[#153970] mb-2 font-brand">Donar</h3>
               <p className="text-[#5F6B70] leading-relaxed mb-1 px-4">
                 Ayúdanos a seguir cambiando vidas con tu aporte para Patitas Caminando.
               </p>
-              <p className="text-[#62D9D9] font-semibold text-sm mb-6">
-                No necesitas una cuenta para donar.
+              <p className="text-[#62D9D9] font-semibold text-sm mb-6 font-brand text-lg">
+                Cada aporte se transforma en alimento, cuidado y esperanza.
               </p>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-1 pb-2">
+            <div className="flex-1 w-full mt-2">
               <form onSubmit={handleSubmit} noValidate className="text-left space-y-5">
-              
+
                 {validationErrors.global && (
                   <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm mb-6 flex items-start gap-3">
                     <X className="shrink-0 mt-0.5" size={16} />

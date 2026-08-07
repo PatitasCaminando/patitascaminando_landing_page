@@ -91,6 +91,16 @@ export default function AnimalDetailPage() {
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [relatedAnimals, setRelatedAnimals] = useState<Animal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [offlineError, setOfflineError] = useState(false);
+  const [isImageLoading, setIsImageLoading] = useState(true);
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      // Forzar que la página inicie desde arriba una vez cargada la información
+      window.scrollTo(0, 0);
+      setTimeout(() => window.scrollTo(0, 0), 100);
+    }
+  }, [isLoading]);
 
   React.useEffect(() => {
     const fetchAnimal = async () => {
@@ -117,6 +127,9 @@ export default function AnimalDetailPage() {
         }
       } catch (err) {
         console.error(err);
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+          setOfflineError(true);
+        }
       } finally {
         setIsLoading(false);
       }
@@ -201,13 +214,14 @@ export default function AnimalDetailPage() {
             className="absolute -bottom-8 md:-bottom-12 lg:-bottom-16 -right-6 md:-right-10 lg:-right-14 w-40 md:w-64 lg:w-96 z-0 pointer-events-none" 
           />
           <ErrorStateTemplate
-            title="Animalito no encontrado"
-            message="No pudimos encontrar esta ficha de adopción. Puedes volver a la sección de adopciones para conocer a otros rescatados."
+            title={offlineError ? "Sin Conexión" : "Animalito no encontrado"}
+            message={offlineError ? "No pudimos cargar esta información porque no hay conexión y aún no existe una versión guardada." : "No pudimos encontrar esta ficha de adopción. Puedes volver a la sección de adopciones para conocer a otros rescatados."}
             doodleSrc={doodleGeneric.src}
             doodleClassName="w-80 sm:w-96 md:w-[26rem] lg:w-[30rem] xl:w-[36rem] max-w-full drop-shadow-sm pointer-events-none -mb-10 md:-mb-14 lg:-mb-20"
             primaryActionLabel="Volver a adopciones"
             primaryActionHref="/#adopciones"
             isGlobal={true}
+            isOfflineState={offlineError}
           />
         </div>
         <Footer />
@@ -293,11 +307,17 @@ export default function AnimalDetailPage() {
             
             {/* Image (Left on Desktop, order 1 on mobile) */}
             <div className="w-full lg:w-[45%] xl:w-[45%] order-1 lg:order-1 relative">
-              <div className="w-full h-[350px] sm:h-[450px] lg:h-full min-h-[550px] lg:min-h-[600px] rounded-[32px] overflow-hidden relative shadow-patitas-sm group">
+              <div className="w-full h-[350px] sm:h-[450px] lg:h-full min-h-[550px] lg:min-h-[600px] rounded-[32px] overflow-hidden relative shadow-patitas-sm group bg-gray-100">
+                {isImageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <Lottie animationData={loadingAnimation} loop={true} className="w-20 h-20 opacity-60" />
+                  </div>
+                )}
                 <img 
                   src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}
                   alt={`Foto de ${animal.name}`}
-                  className="w-[110%] h-[110%] object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-700 group-hover:scale-105"
+                  onLoad={() => setIsImageLoading(false)}
+                  className={`w-[110%] h-[110%] object-cover absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 group-hover:scale-105 ${isImageLoading ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
                 />
               </div>
             </div>
@@ -377,11 +397,11 @@ export default function AnimalDetailPage() {
               </div>
 
               {/* CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+              <div className="flex flex-col sm:flex-row gap-4 mt-auto w-full items-stretch">
                 {canAdopt ? (
                   <Button 
                     variant="primary" 
-                    className="flex-1 rounded-full py-4 text-lg shadow-md flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto sm:flex-1 rounded-full py-4 px-4 text-lg shadow-md flex items-center justify-center gap-2"
                     onClick={() => setIsAdoptionModalOpen(true)}
                   >
                     <PawPrint size={20} />
@@ -391,17 +411,19 @@ export default function AnimalDetailPage() {
                   <Button 
                     variant="primary" 
                     disabled
-                    className="flex-1 rounded-full py-4 text-lg shadow-md flex items-center justify-center gap-2 opacity-50 cursor-not-allowed pointer-events-none bg-[#EAF4F5] text-[#5F6B70] border-none"
+                    className="w-full sm:w-auto sm:flex-1 rounded-full py-4 px-4 text-sm sm:text-base lg:text-lg leading-tight shadow-md flex items-center justify-center gap-2 opacity-60 cursor-not-allowed pointer-events-none bg-[#EAF4F5] text-[#5F6B70] border-none"
                   >
-                    <PawPrint size={20} />
-                    {adoptionBlockedMessages[animal.status] || 'No disponible para adopción'}
+                    <PawPrint size={20} className="shrink-0" />
+                    <span className="truncate">
+                      {adoptionBlockedMessages[animal.status] || 'No disponible'}
+                    </span>
                   </Button>
                 )}
                 
                 <Button 
                   variant="outline" 
                   onClick={handleShare}
-                  className="rounded-full py-4 px-8 border-2 border-[#F1D9BD] text-[#5F6B70] hover:bg-[#FDF3E7] hover:border-[#F69222] hover:!text-[#F69222] transition-colors flex items-center justify-center gap-2 bg-white"
+                  className="w-full sm:w-auto sm:flex-none rounded-full py-4 px-4 sm:px-8 border-2 border-[#F1D9BD] text-[#5F6B70] hover:bg-[#FDF3E7] hover:border-[#F69222] hover:!text-[#F69222] transition-colors flex items-center justify-center gap-2 bg-white"
                 >
                   <Share2 size={20} />
                   {copied ? '¡Copiado!' : 'Compartir'}
@@ -447,7 +469,7 @@ export default function AnimalDetailPage() {
               aria-hidden="true" 
               className="absolute top-6 right-6 w-12 md:w-20 lg:w-24 rotate-12 pointer-events-none opacity-50"
             />
-            <h3 className="text-xl font-bold text-[#153970] mb-6 relative z-10">Cuidados y características</h3>
+            <h3 className="text-xl font-bold text-[#153970] mb-6 relative z-10 pr-12 md:pr-0">Cuidados y <br className="block sm:hidden" /> características</h3>
             <ul className="space-y-4 relative z-10">
               <li className="flex gap-3">
                 <div className="bg-[#FDF3E7] text-[#F69222] p-2 rounded-full shrink-0 h-10 w-10 flex items-center justify-center">
@@ -497,12 +519,10 @@ export default function AnimalDetailPage() {
 
       <Footer />
       
+      {/* Modals de Adopción */}
       <AdoptionRequestModal
-        key={`adoption-form-${adoptionFormKey}`}
         isOpen={isAdoptionModalOpen}
-        onClose={() => {
-          setIsAdoptionModalOpen(false);
-        }}
+        onClose={() => setIsAdoptionModalOpen(false)}
         onSubmit={handleAdoptionSubmit}
         animal={animal}
         loading={isAdoptionLoading}
@@ -510,6 +530,7 @@ export default function AnimalDetailPage() {
       />
 
       <AdoptionSuccessModal
+        key={`success-${adoptionFormKey}`}
         isOpen={isAdoptionSuccess}
         onClose={() => setIsAdoptionSuccess(false)}
         animal={animal}
@@ -517,11 +538,12 @@ export default function AnimalDetailPage() {
 
       <AdoptionErrorModal
         isOpen={isAdoptionErrorModalOpen}
+        onClose={() => setIsAdoptionErrorModalOpen(false)}
         onRetry={() => {
           setIsAdoptionErrorModalOpen(false);
           setIsAdoptionModalOpen(true);
         }}
-        onClose={() => setIsAdoptionErrorModalOpen(false)}
+        isOfflineState={offlineError || (typeof navigator !== 'undefined' && !navigator.onLine)}
       />
     </main>
   );

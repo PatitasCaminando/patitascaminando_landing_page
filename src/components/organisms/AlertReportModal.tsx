@@ -38,7 +38,7 @@ export const AlertReportModal: React.FC<AlertReportModalProps> = ({
 
       {/* Modal Content */}
       <div
-        className="relative bg-white w-full max-w-2xl rounded-[32px] shadow-patitas p-6 sm:p-8 md:p-12 transform transition-all duration-300 scale-100 opacity-100 my-auto mx-auto"
+        className="relative bg-white w-full max-w-2xl rounded-[32px] shadow-patitas p-6 sm:p-8 md:p-12 transform transition-all duration-300 scale-100 opacity-100 my-auto mx-auto flex flex-col overflow-y-auto max-h-[90vh]"
         role="dialog"
         aria-modal="true"
       >
@@ -63,12 +63,12 @@ export const AlertReportModal: React.FC<AlertReportModalProps> = ({
             />
           </div>
 
-          <h3 className="text-3xl font-extrabold text-[#153970] mb-3">Reportar un caso</h3>
+          <h3 className="text-3xl font-extrabold text-[#153970] mb-3 font-brand">Reportar un caso</h3>
           <p className="text-[#5F6B70] leading-relaxed mb-2 max-w-lg mx-auto">
             Si deseas reportar un animalito en situación de riesgo, abandono o extravío, puedes escribirnos directamente por nuestras redes sociales oficiales de Patitas Caminando.
           </p>
           <p className="text-[#F69222] font-semibold text-sm mb-8">
-            No necesitas una cuenta para contactarnos.
+            Una alerta a tiempo puede ayudar a ponerlo a salvo.
           </p>
 
           <div className="text-left space-y-6">

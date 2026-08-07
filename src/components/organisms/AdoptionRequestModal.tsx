@@ -46,6 +46,8 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
   });
 
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  
+
   const [randomSubtitle, setRandomSubtitle] = useState('');
 
   // Generar subtitulo cuando se abre
@@ -149,6 +151,8 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+
+
     if (!validate()) {
       return;
     }
@@ -184,7 +188,7 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-xl bg-white rounded-[32px] shadow-2xl z-10 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-xl bg-white rounded-[32px] shadow-2xl z-10 flex flex-col my-auto mx-auto overflow-hidden">
         {/* Close Button */}
         <button
           onClick={() => !loading && onClose()}
@@ -195,8 +199,8 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
         </button>
 
         {/* FORM STATE */}
-        <div className="flex flex-col h-full overflow-hidden">
-          {/* Header (Sticky) */}
+        <div className="flex flex-col h-full px-2 py-2">
+          {/* Header */}
           <div className="pt-8 px-6 md:px-10 pb-4 text-center shrink-0 border-b border-gray-100 relative">
             <div className="flex justify-center mb-4 relative z-10">
               <CircularShadowImage
@@ -218,19 +222,19 @@ export const AdoptionRequestModal: React.FC<AdoptionRequestModalProps> = ({
                 aria-hidden="true" 
               />
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-[#153970] mb-2">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-[#153970] mb-2 font-brand">
               Quiero adoptar a: {animal.name}
             </h2>
             <p className="text-[#5F6B70] text-sm md:text-base leading-relaxed mb-1">
               Tu decisión puede cambiar la vida de {animal.name} y darle una familia responsable.
             </p>
-            <p className="text-[#F69222] text-sm font-semibold">
-              No necesitas una cuenta para adoptar.
+            <p className="text-[#F69222] font-semibold text-lg font-brand">
+              Aquí puede comenzar una historia para toda la vida.
             </p>
           </div>
 
-          {/* Scrollable Form Body */}
-          <div className="flex-1 overflow-y-auto px-6 md:px-10 py-6">
+          {/* Form Body */}
+          <div className="flex-1 px-6 md:px-10 py-6">
             <form id="adoption-form" onSubmit={handleSubmit} className="space-y-5">
               
               {validationErrors.global && (

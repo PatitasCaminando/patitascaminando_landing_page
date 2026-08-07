@@ -30,19 +30,22 @@ export const FAQSection = () => {
           subtitle="Resolvemos tus principales dudas sobre cómo funcionamos y cómo puedes involucrarte." 
         />
         
-        <div className="mt-12 space-y-4">
+        <div className="mt-12 flex flex-col gap-[14px] md:gap-4">
           {faqs.map((faq) => (
             <details 
               key={faq.id} 
-              className="group bg-[#FFF7EA] rounded-[24px] overflow-hidden border border-[#F1D9BD] transition-all"
+              className="group bg-[#FDF3E7] md:bg-[#FFF7EA] rounded-[22px] md:rounded-[24px] overflow-hidden border border-[#F1D9BD] hover:border-[#F69222]/30 open:border-[#F69222]/50 open:shadow-sm transition-all duration-300 relative"
             >
-              <summary className="flex items-center justify-between p-6 cursor-pointer font-bold text-lg text-[#153970] hover:text-[#F69222] transition-colors marker:content-none">
-                {faq.question}
-                <span className="transition group-open:rotate-180">
-                  <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+              {/* Acento naranja que aparece al abrir (Solo un detalle visual sutil a la izquierda) */}
+              <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#F69222] opacity-0 group-open:opacity-100 transition-opacity duration-300"></div>
+              
+              <summary className="flex items-center justify-between p-[18px] px-[20px] md:p-6 cursor-pointer font-bold text-[15px] md:text-lg text-[#153970] hover:text-[#F69222] transition-colors marker:content-none">
+                <span className="text-left pr-4 line-clamp-2 md:line-clamp-none leading-snug">{faq.question}</span>
+                <span className="transition-transform duration-300 group-open:rotate-180 shrink-0 text-[#153970]">
+                  <svg fill="none" height="20" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" viewBox="0 0 24 24" width="20"><path d="M6 9l6 6 6-6"></path></svg>
                 </span>
               </summary>
-              <div className="px-6 pb-6 text-[#5F6B70] leading-relaxed">
+              <div className="px-[20px] pb-[18px] md:px-6 md:pb-6 text-sm md:text-base text-[#5F6B70] leading-relaxed">
                 {faq.answer}
               </div>
             </details>
