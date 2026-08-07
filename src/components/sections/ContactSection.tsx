@@ -1,6 +1,6 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Smartphone } from 'lucide-react';
-import doodlePerritoCampanas from '@/assets/ilustraciones/doodles/doodle_perrito_campañas.png';
+import doodlePerritoCampanas from '@/assets/ilustraciones/doodles/doodle_perrito_campanas.png';
 
 export const ContactSection = () => {
   return (
