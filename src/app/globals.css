@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Skeleton UI */
+@import "@skeletonlabs/skeleton";
+@import "@skeletonlabs/skeleton-react";
+@import "@skeletonlabs/skeleton/themes/cerberus";
 @theme {
   --color-primary: #F69222;
   --color-primary-dark: #D67C14;

@@ -9,6 +9,15 @@ export function useCacheConsent() {
 
   useEffect(() => {
     // Evitar SSR issues
+    // Si la app ya está instalada (standalone), asumimos que el caché está implícitamente aceptado
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone;
+    
+    if (isStandalone) {
+      localStorage.setItem(CONSENT_KEY, 'true');
+      setHasAcceptedCache(true);
+      return;
+    }
+
     const consent = localStorage.getItem(CONSENT_KEY);
     setHasAcceptedCache(consent === 'true');
   }, []);

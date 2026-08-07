@@ -3,8 +3,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorStateTemplate } from '@/components/ui/ErrorStateTemplate';
-import doodle500 from '@/assets/errors/error_500.png';
-import doodleOffline from '@/assets/errors/error_ofline.png';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
@@ -41,7 +39,7 @@ export default function Error({
         <ErrorStateTemplate
           title={isOffline ? "Sin Conexión" : "Algo salió mal"}
           message={isOffline ? "No pudimos cargar esta sección porque no hay conexión y aún no existe una versión guardada." : "No pudimos cargar esta sección en este momento. Intenta nuevamente en unos segundos."}
-          doodleSrc={isOffline ? doodleOffline.src : doodle500.src}
+          doodleSrc={isOffline ? '/pwa-images/error_offline.png' : '/pwa-images/error_500.png'}
           primaryActionLabel="Intentar nuevamente"
           onPrimaryAction={reset}
           secondaryActionLabel="Volver"

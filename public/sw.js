@@ -1,4 +1,4 @@
-const CACHE_NAME = 'patitas-cache-v3';
+const CACHE_NAME = 'patitas-cache-v4';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_ASSETS = [
@@ -6,7 +6,10 @@ const PRECACHE_ASSETS = [
   OFFLINE_URL,
   '/icon-192x192.png',
   '/icon-512x512.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/pwa-images/error_500.png',
+  '/pwa-images/error_offline.png',
+  '/pwa-images/perrito4.jpg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -32,7 +35,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activando v3...');
+  console.log('[Service Worker] Activando v4...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -136,10 +139,12 @@ self.addEventListener('fetch', (event) => {
   if (url.pathname.match(/\.(png|jpg|jpeg|svg|gif|webp)$/) || url.hostname.includes('supabase')) {
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
-        // Stale-While-Revalidate para imágenes asegura que se mantengan visibles,
-        // pero se actualicen si cambian (poco probable, pero seguro)
-        const networkFetch = fetchAndUpdateCache(event.request);
-        return cachedResponse || networkFetch.then(res => res || Response.error());
+        const networkFetch = fetchAndUpdateCache(event.request).catch(() => null);
+        return cachedResponse || networkFetch.then(res => {
+          if (res) return res;
+          // Fallback image para cuando no hay conexión
+          return caches.match('/pwa-images/error_offline.png');
+        });
       })
     );
     return;
@@ -167,7 +172,7 @@ self.addEventListener('fetch', (event) => {
           
           // Verificar que no sea el HTML de error/advertencia del túnel antes de cachear
           const text = await responseClone.text();
-          if (!text.includes('Bypass Tunnel Reminder') && !text.includes('Pinggy')) {
+          if (!text.includes('Bypass Tunnel Reminder') && !text.includes('Pinggy') && !text.includes('Algo salió mal')) {
              const cacheResponse = new Response(text, {
                status: response.status,
                statusText: response.statusText,
@@ -179,7 +184,15 @@ self.addEventListener('fetch', (event) => {
           return response;
         } catch (e) {
           const cachedResponse = await caches.match(event.request);
-          if (cachedResponse) return cachedResponse;
+          if (cachedResponse) {
+             // Si el HTML en cache tiene "Algo salió mal", mejor mandarlo al offline puro
+             const cloneForCheck = cachedResponse.clone();
+             const text = await cloneForCheck.text();
+             if (text.includes('Algo salió mal')) {
+               return caches.match(OFFLINE_URL);
+             }
+             return cachedResponse;
+          }
           return caches.match(OFFLINE_URL);
         }
       })()

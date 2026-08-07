@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { WifiOff } from 'lucide-react';
 
@@ -23,7 +23,8 @@ export const CircularShadowImage: React.FC<CircularShadowImageProps> = ({
   width = 300,
   height = 300
 }) => {
-  const [hasError, setHasError] = React.useState(false);
+  const [hasError, setHasError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const shadows = {
     orange: 'shadow-[0_10px_25px_-5px_rgba(246,146,34,0.4)]',
@@ -42,14 +43,20 @@ export const CircularShadowImage: React.FC<CircularShadowImageProps> = ({
   }
 
   return (
-    <div className={`flex items-end justify-center bg-white rounded-full relative overflow-hidden ${shadows[shadowColor]} ${containerClassName}`}>
+    <div className={`flex items-end justify-center bg-white rounded-full relative overflow-hidden [transform:translateZ(0)] ${shadows[shadowColor]} ${containerClassName}`}>
+      {!isLoaded && (
+        <div className="absolute inset-0 z-10 rounded-full overflow-hidden">
+           <div className="w-full h-full rounded-full bg-gray-200 animate-pulse" />
+        </div>
+      )}
       <Image 
         src={src} 
         alt={alt} 
         width={width} 
         height={height}
-        className={`object-contain drop-shadow-sm ${imageClassName}`}
+        className={`object-contain rounded-full drop-shadow-sm transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${imageClassName}`}
         onError={() => setHasError(true)}
+        onLoad={() => setIsLoaded(true)}
       />
     </div>
   );

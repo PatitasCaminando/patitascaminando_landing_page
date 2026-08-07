@@ -42,11 +42,9 @@ export const AnimalCard: React.FC<{
       style={style}
     >
       <div className="relative h-[300px] w-full bg-[#F7E5CF] overflow-hidden">
-        {/* Placeholder spinner while loading */}
+        {/* Placeholder skeleton while loading */}
         {!imageLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-[#F7E5CF]">
-            <Lottie animationData={loadingAnimation} loop={true} className="w-16 h-16" />
-          </div>
+          <div className="absolute inset-0 z-10 bg-[#F7E5CF] animate-pulse" />
         )}
         <img
           src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}

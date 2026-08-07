@@ -6,7 +6,6 @@ import { Button } from '../ui/Button';
 import { AlertReportModal } from '../organisms/AlertReportModal';
 import { PawPrint, Heart, HeartHandshake, Home, Info } from 'lucide-react';
 
-import dogHeroImg from '@/assets/perritos/perrito4.jpg';
 import doodleTopLeft from '@/assets/ilustraciones/doodles/doodle_marca_esquinero_superior_izquierdo.png';
 import doodleBottomRight from '@/assets/ilustraciones/doodles/doodle_marca_esquinero_inferior_derecho.png';
 
@@ -115,7 +114,7 @@ export const HeroSection = () => {
         <div className="relative z-20 w-full lg:w-1/2 mt-10 lg:mt-0 flex justify-center items-center">
           <div className="relative z-10 w-full max-w-[520px] aspect-[4/5] overflow-hidden rounded-tl-[120px] rounded-br-[120px] rounded-tr-[42px] rounded-bl-[42px] border-4 border-white bg-white shadow-patitas">
             <img
-              src={dogHeroImg.src}
+              src="/pwa-images/perrito4.jpg"
               alt="Perro feliz rescatado por Patitas Caminando"
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
             />
