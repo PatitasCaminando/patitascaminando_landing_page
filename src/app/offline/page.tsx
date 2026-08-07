@@ -1,5 +1,5 @@
 import React from 'react';
-import { WifiOff } from 'lucide-react';
+import { WifiOff, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function OfflinePage() {
@@ -18,8 +18,9 @@ export default function OfflinePage() {
         
         <Link 
           href="/"
-          className="w-full inline-flex justify-center items-center px-6 py-4 rounded-xl bg-[#F69222] text-white font-bold text-lg hover:bg-[#E07F19] transition-all shadow-md hover:shadow-lg active:scale-95"
+          className="w-full flex justify-center items-center gap-2 px-6 py-4 rounded-full bg-[#F69222] text-white font-bold text-lg hover:bg-[#E07F19] transition-all shadow-md hover:shadow-lg active:scale-95"
         >
+          <ArrowLeft size={20} />
           Volver al Inicio
         </Link>
       </div>

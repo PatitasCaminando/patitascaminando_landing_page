@@ -411,7 +411,7 @@ export default function AnimalDetailPage() {
                   <Button 
                     variant="primary" 
                     disabled
-                    className="w-full sm:w-auto sm:flex-1 rounded-full py-4 px-4 text-sm sm:text-base lg:text-lg leading-tight shadow-md flex items-center justify-center gap-2 opacity-60 cursor-not-allowed pointer-events-none bg-[#EAF4F5] text-[#5F6B70] border-none"
+                    className="w-full sm:w-auto sm:flex-1 rounded-full py-4 px-4 text-lg shadow-md flex items-center justify-center gap-2 opacity-60 cursor-not-allowed pointer-events-none bg-[#EAF4F5] text-[#5F6B70] border-none"
                   >
                     <PawPrint size={20} className="shrink-0" />
                     <span className="truncate">
