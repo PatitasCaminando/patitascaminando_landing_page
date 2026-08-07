@@ -156,6 +156,13 @@ self.addEventListener('fetch', (event) => {
           const newRequest = new Request(event.request, { headers: newHeaders });
           
           const response = await fetch(newRequest);
+          
+          // Si es un redireccionamiento (opaqueredirect), retornarlo inmediatamente
+          // para que el navegador lo siga, y evitar el error al hacer .text()
+          if (response.type === 'opaqueredirect' || response.status >= 300 && response.status < 400) {
+            return response;
+          }
+          
           const responseClone = response.clone();
           
           // Verificar que no sea el HTML de error/advertencia del túnel antes de cachear
