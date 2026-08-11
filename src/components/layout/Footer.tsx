@@ -21,7 +21,7 @@ export const Footer = () => {
               Cambiamos destinos con amor, comunidad y compromiso por el bienestar animal.
             </p>
             <div className="flex gap-4 justify-start w-full">
-              <a href="https://www.facebook.com/PatitasCaminando" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
+              <a href="https://www.facebook.com/p/Patitas-Caminando-100090071507005/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
                 <FaFacebookF size={18} />
               </a>
               <a href="https://www.instagram.com/patitascaminando5" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
@@ -36,13 +36,13 @@ export const Footer = () => {
           <div>
             <h4 className="font-bold text-xl mb-6">Enlaces rápidos</h4>
             <ul className="space-y-4 text-[#FFE2C2]">
-              <li><Link href="#inicio" className="hover:text-white transition-colors">Inicio</Link></li>
-              <li><Link href="#sobre" className="hover:text-white transition-colors">Sobre Patitas</Link></li>
-              <li><Link href="#adopciones" className="hover:text-white transition-colors">Adopciones</Link></li>
-              <li><Link href="#donaciones" className="hover:text-white transition-colors">Donaciones</Link></li>
-              <li><Link href="#" className="hover:text-white transition-colors">Reportar un caso</Link></li>
-              <li><Link href="#faq" className="hover:text-white transition-colors">Preguntas frecuentes</Link></li>
-              <li><Link href="#contacto" className="hover:text-white transition-colors">Contacto</Link></li>
+              <li><Link href="/#inicio" className="hover:text-white transition-colors">Inicio</Link></li>
+              <li><Link href="/#sobre" className="hover:text-white transition-colors">Sobre Patitas</Link></li>
+              <li><Link href="/#adopciones" className="hover:text-white transition-colors">Adopciones</Link></li>
+              <li><Link href="/#donaciones" className="hover:text-white transition-colors">Donaciones</Link></li>
+              <li><Link href="/#contacto" className="hover:text-white transition-colors">Reportar un caso</Link></li>
+              <li><Link href="/#faq" className="hover:text-white transition-colors">Preguntas frecuentes</Link></li>
+              <li><Link href="/#contacto" className="hover:text-white transition-colors">Contacto</Link></li>
             </ul>
           </div>
           

@@ -193,10 +193,12 @@ export const Header = () => {
             className={`md:hidden p-2.5 bg-[#FFF7EA] border border-[#F1D9BD] hover:bg-[#FFE2C2] rounded-full shadow-md hover:shadow-lg transition-all flex items-center justify-center ${isMobileMenuOpen ? 'text-[#F69222]' : 'text-[#153970]'}`}
             aria-label="Abrir menú"
           >
-            <PawPrint 
-              size={22} 
-              className={`transition-all duration-300 ease-out ${isMobileMenuOpen ? '-translate-x-1 scale-110 -rotate-12' : 'translate-x-0 scale-100 rotate-0'}`} 
-            />
+            <span className={!isMobileMenuOpen ? "animate-bounce" : ""}>
+              <PawPrint 
+                size={22} 
+                className={`transition-all duration-300 ease-out ${isMobileMenuOpen ? '-translate-x-1 scale-110 -rotate-12' : 'translate-x-0 scale-100 rotate-0'}`} 
+              />
+            </span>
           </button>
         </div>
       </div>

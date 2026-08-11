@@ -1,4 +1,4 @@
-const CACHE_NAME = 'patitas-cache-v4';
+const CACHE_NAME = 'patitas-cache-v5';
 const OFFLINE_URL = '/offline';
 
 const PRECACHE_ASSETS = [
@@ -35,7 +35,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activando v4...');
+  console.log('[Service Worker] Activando v5...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(

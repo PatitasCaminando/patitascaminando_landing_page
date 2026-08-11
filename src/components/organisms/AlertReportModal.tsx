@@ -104,7 +104,7 @@ export const AlertReportModal: React.FC<AlertReportModalProps> = ({
             <div>
               <p className="text-[#5F6B70] text-sm mb-2 font-medium">Redes sociales oficiales</p>
               <div className="w-full px-4 py-6 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-center gap-6">
-                <a href="https://www.facebook.com/PatitasCaminando" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#F69222] text-white rounded-full flex items-center justify-center hover:bg-[#153970] transition-colors" aria-label="Facebook">
+                <a href="https://www.facebook.com/p/Patitas-Caminando-100090071507005/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#F69222] text-white rounded-full flex items-center justify-center hover:bg-[#153970] transition-colors" aria-label="Facebook">
                   <FaFacebookF size={20} />
                 </a>
                 <a href="https://www.instagram.com/patitascaminando5" target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-[#F69222] text-white rounded-full flex items-center justify-center hover:bg-[#153970] transition-colors" aria-label="Instagram">

@@ -21,6 +21,10 @@ export default function PWAInstallWrapper() {
       if (localStorage.getItem('patitas_cache_consent') !== 'true') return;
       if (localStorage.getItem('patitas_install_modal_shown') === 'true') return;
 
+      // Check if device is mobile or tablet, do not show on desktop browsers
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (!isMobile) return;
+
       if (pwaInstallRef.current) {
         // Envolver en try-catch por precaución
         try { pwaInstallRef.current.showDialog(); } catch (e) {}
