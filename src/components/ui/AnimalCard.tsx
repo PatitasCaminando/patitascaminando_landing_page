@@ -3,6 +3,7 @@ import { Animal } from '@/types';
 import { Heart, PawPrint, Dog, Cat, Calendar, Ruler } from 'lucide-react';
 import Link from 'next/link';
 import Lottie from 'lottie-react';
+import Image from 'next/image';
 import loadingAnimation from '@/assets/lotties/loading.json';
 
 export const AnimalCard: React.FC<{ 
@@ -46,13 +47,15 @@ export const AnimalCard: React.FC<{
         {!imageLoaded && (
           <div className="absolute inset-0 z-10 bg-[#F7E5CF] animate-pulse" />
         )}
-        <img
+        <Image
           src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}
           alt={animal.name}
           onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover object-center transition-all duration-700 ease-in-out group-hover:scale-110 ${
+          className={`object-cover object-center transition-all duration-700 ease-in-out group-hover:scale-110 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
           }`}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           loading="lazy"
         />
       </div>

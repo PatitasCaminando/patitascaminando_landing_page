@@ -2,6 +2,7 @@ import React from 'react';
 import { Animal } from '@/types';
 import { PawPrint, Dog, Cat } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const HorizontalAnimalCard: React.FC<{ animal: Animal }> = ({ animal }) => {
   const getSpeciesIcon = () => {
@@ -19,10 +20,12 @@ export const HorizontalAnimalCard: React.FC<{ animal: Animal }> = ({ animal }) =
       
       {/* Image Side - slightly adjusted for 1:1 aspect feel */}
       <div className="w-[45%] h-full shrink-0 relative bg-[#F7E5CF]">
-        <img
+        <Image
           src={typeof animal.imageUrl === 'string' ? animal.imageUrl : animal.imageUrl?.src}
           alt={animal.name}
-          className="w-full h-full object-cover object-top"
+          className="object-cover object-top"
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
 

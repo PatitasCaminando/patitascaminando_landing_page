@@ -21,13 +21,13 @@ export const Footer = () => {
               Cambiamos destinos con amor, comunidad y compromiso por el bienestar animal.
             </p>
             <div className="flex gap-4 justify-start w-full">
-              <a href="https://www.facebook.com/p/Patitas-Caminando-100090071507005/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
+              <a href="https://www.facebook.com/p/Patitas-Caminando-100090071507005/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
                 <FaFacebookF size={18} />
               </a>
-              <a href="https://www.instagram.com/patitascaminando5" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
+              <a href="https://www.instagram.com/patitascaminando5" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
                 <FaInstagram size={20} />
               </a>
-              <a href="https://www.tiktok.com/@patitascaminando5" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
+              <a href="https://www.tiktok.com/@patitascaminando5" target="_blank" rel="noopener noreferrer" aria-label="TikTok" className="w-10 h-10 bg-[#D67C14] rounded-full flex items-center justify-center hover:bg-white hover:text-[#F69222] transition-colors">
                 <FaTiktok size={18} />
               </a>
             </div>

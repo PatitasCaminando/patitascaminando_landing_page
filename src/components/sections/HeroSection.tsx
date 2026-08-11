@@ -3,7 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '../ui/Button';
-import { AlertReportModal } from '../organisms/AlertReportModal';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+const AlertReportModal = dynamic(() => import('../organisms/AlertReportModal').then(mod => mod.AlertReportModal), { ssr: false });
 import { PawPrint, Heart, HeartHandshake, Home, Info } from 'lucide-react';
 
 import doodleTopLeft from '@/assets/ilustraciones/doodles/doodle_marca_esquinero_superior_izquierdo.png';
@@ -57,18 +60,20 @@ export const HeroSection = () => {
       className="relative min-h-[88vh] overflow-hidden bg-[#FFF7EA] px-4 pt-36 pb-24 flex items-center justify-center"
     >
       {/* Decorative Corner Doodles */}
-      <img
-        src={doodleTopLeft.src}
-        alt=""
+      <Image
+        src={doodleTopLeft}
+        alt="Doodle decorativo"
         aria-hidden="true"
-        className="absolute top-0 left-0 w-32 md:w-48 lg:w-64 xl:w-72 opacity-100 pointer-events-none select-none z-0 block"
+        className="absolute top-0 left-0 w-32 md:w-48 lg:w-64 xl:w-72 opacity-100 pointer-events-none select-none z-0 block h-auto"
+        sizes="(max-width: 768px) 128px, (max-width: 1024px) 192px, 288px"
       />
 
-      <img
-        src={doodleBottomRight.src}
-        alt=""
+      <Image
+        src={doodleBottomRight}
+        alt="Doodle decorativo"
         aria-hidden="true"
-        className="absolute bottom-0 right-0 w-32 md:w-48 lg:w-64 xl:w-[320px] opacity-100 pointer-events-none select-none z-0 block"
+        className="absolute bottom-0 right-0 w-32 md:w-48 lg:w-64 xl:w-[320px] opacity-100 pointer-events-none select-none z-0 block h-auto"
+        sizes="(max-width: 768px) 128px, (max-width: 1024px) 192px, 320px"
       />
 
       <div className="relative z-10 mx-auto w-full max-w-6xl flex flex-col lg:flex-row items-center gap-12 lg:gap-14">
@@ -113,10 +118,14 @@ export const HeroSection = () => {
         {/* Image Content */}
         <div className="relative z-20 w-full lg:w-1/2 mt-10 lg:mt-0 flex justify-center items-center">
           <div className="relative z-10 w-full max-w-[520px] aspect-[4/5] overflow-hidden rounded-tl-[120px] rounded-br-[120px] rounded-tr-[42px] rounded-bl-[42px] border-4 border-white bg-white shadow-patitas">
-            <img
+            <Image
               src="/pwa-images/perrito4.jpg"
               alt="Perro feliz rescatado por Patitas Caminando"
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+              fetchPriority="high"
+              className="object-cover hover:scale-105 transition-transform duration-700"
             />
           </div>
 

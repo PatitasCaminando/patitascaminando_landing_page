@@ -9,9 +9,11 @@ import Image from 'next/image';
 import logoImg from '@/assets/logos/isologo/01_isologo_color_primario_transparente.png';
 import logotipoImg from '@/assets/ilustraciones/doodles/user/logotipo.png';
 import doodleHuesitos from '@/assets/ilustraciones/doodles/doodle_huesitos.png';
-import { DonationModal } from '../organisms/DonationModal';
-import { DonationSuccessModal } from '../organisms/DonationSuccessModal';
-import { DonationErrorModal } from '../organisms/DonationErrorModal';
+import dynamic from 'next/dynamic';
+
+const DonationModal = dynamic(() => import('../organisms/DonationModal').then(mod => mod.DonationModal), { ssr: false });
+const DonationSuccessModal = dynamic(() => import('../organisms/DonationSuccessModal').then(mod => mod.DonationSuccessModal), { ssr: false });
+const DonationErrorModal = dynamic(() => import('../organisms/DonationErrorModal').then(mod => mod.DonationErrorModal), { ssr: false });
 import { DonationsService } from '@/core/services/donations.service';
 import { HttpError } from '@/core/api/http-client';
 

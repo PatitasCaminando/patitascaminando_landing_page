@@ -1,15 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
-import { CacheConsentBottomSheet } from "@/components/pwa/CacheConsentBottomSheet";
-import { PWAInstallModal } from "@/components/pwa/PWAInstallModal";
-import PWAInstallWrapper from "@/components/pwa/PWAInstallWrapper";
+import dynamic from 'next/dynamic';
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+const CacheConsentBottomSheet = dynamic(() => import('@/components/pwa/CacheConsentBottomSheet').then(mod => mod.CacheConsentBottomSheet));
+const PWAInstallModal = dynamic(() => import('@/components/pwa/PWAInstallModal').then(mod => mod.PWAInstallModal));
+const PWAInstallWrapper = dynamic(() => import('@/components/pwa/PWAInstallWrapper'));
+
+const nunito = localFont({
+  src: "../assets/fonts/dyna_puff_nunito/Nunito/Nunito-VariableFont_wght.ttf",
+  variable: "--font-inter", // Reusing the same variable name to avoid changing globals.css and tailwind config
   display: "swap",
 });
 
@@ -42,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${dynaPuff.variable}`} suppressHydrationWarning>
+    <html lang="es" className={`${nunito.variable} ${dynaPuff.variable}`} suppressHydrationWarning>
       <body className="font-inter font-sans" suppressHydrationWarning>
         <div className="w-full overflow-x-hidden">
           {children}
