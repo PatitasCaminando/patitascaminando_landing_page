@@ -30,33 +30,7 @@ import {
   Cat, Dog, Info, Heart, ShieldCheck, Calendar, Ruler, Clock
 } from 'lucide-react';
 
-function getAnimalEmotionalPhrase(animal: { name: string; sex?: string; status: string; }): string {
-  const name = animal.name;
-  const sex = animal.sex?.toLowerCase() || '';
-
-  const isPlural =
-    sex === 'ambos' ||
-    name.toLowerCase().startsWith('los ') ||
-    name.toLowerCase().startsWith('las ');
-
-  const phrases: Record<string, string> = {
-    disponible: isPlural
-      ? `Al adoptar a ${name}, les das una segunda oportunidad y ganas compañeros fieles para toda la vida.`
-      : `Al adoptar a ${name}, le das una segunda oportunidad y ganas una compañía fiel para toda la vida.`,
-    no_disponible: isPlural
-      ? `${name} no están disponibles para adopción en este momento, pero puedes conocer su historia y acompañar su proceso.`
-      : `${name} no está disponible para adopción en este momento, pero puedes conocer su historia y acompañar su proceso.`,
-    en_proceso: isPlural
-      ? `${name} ya se encuentran en proceso de adopción, una nueva oportunidad que puede cambiar sus vidas.`
-      : `${name} ya se encuentra en proceso de adopción, una nueva oportunidad que puede cambiar su vida.`,
-    adoptado: isPlural
-      ? `${name} ya encontraron un hogar, y su historia nos recuerda que cada adopción responsable cambia vidas.`
-      : `${name} ya encontró un hogar, y su historia nos recuerda que cada adopción responsable cambia una vida.`,
-    archivado: 'Este perfil ya no se encuentra disponible.',
-  };
-
-  return phrases[animal.status] ?? '';
-}
+import { getAnimalEmotionalPhrase } from '@/core/utils/animal-phrases.utils';
 
 function getAnimalCareLabels(sex?: string) {
   const s = sex?.toLowerCase() || '';
