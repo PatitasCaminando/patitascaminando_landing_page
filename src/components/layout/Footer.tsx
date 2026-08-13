@@ -6,9 +6,10 @@ import logoImagotipo from '@/assets/logos/imagotipo/09_imagotipo_color_primario_
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#F69222] text-white py-14 rounded-t-[40px] md:rounded-t-[56px] relative z-20">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+    <div className="bg-white">
+      <footer className="bg-[#F69222] text-white py-14 rounded-t-[40px] md:rounded-t-[56px] relative z-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           <div className="col-span-1 flex flex-col items-start text-left">
             <div className="flex justify-start w-full mb-5">
               <img 
@@ -71,5 +72,6 @@ export const Footer = () => {
         </div>
       </div>
     </footer>
+    </div>
   );
 };
