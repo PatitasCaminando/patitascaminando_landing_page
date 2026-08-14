@@ -61,9 +61,9 @@ export const mapAnimalDTOToUI = (dto: AnimalDTO): Animal => {
     cta: cta,
     detailCta: detailCta,
     observation: dto.description || '', 
-    sterilized: 'Sí', 
-    vaccinated: 'Sí',
-    dewormed: 'Sí',
+    isSterilized: dto.isSterilized, 
+    isVaccinated: dto.isVaccinated,
+    isDewormed: dto.isDewormed,
   };
 };
 

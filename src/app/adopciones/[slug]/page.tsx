@@ -357,15 +357,15 @@ export default function AnimalDetailPage() {
                 {/* Health Chips */}
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-1 flex items-center justify-between">
                   <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.sterilized}</span>
-                  {animal.sterilized === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
+                  {animal.isSterilized === true ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-1 flex items-center justify-between">
                   <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.vaccinated}</span>
-                  {animal.vaccinated === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
+                  {animal.isVaccinated === true ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
                 <div className="bg-white rounded-2xl p-3 border border-[#F1D9BD] col-span-1 lg:col-span-2 flex items-center justify-between">
                   <span className="text-[#5F6B70] text-xs font-semibold uppercase">{careLabels.dewormed}</span>
-                  {animal.dewormed === 'Sí' ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
+                  {animal.isDewormed === true ? <ShieldCheck size={22} className="text-[#4CA456]" /> : <XCircle size={22} className="text-[#8A969B]" />}
                 </div>
 
               </div>
