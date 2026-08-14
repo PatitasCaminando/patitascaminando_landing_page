@@ -16,6 +16,9 @@ export interface AnimalDTO {
   createdAt?: string;
   updatedAt?: string;
   images?: any[];
+  isSterilized?: boolean | null;
+  isVaccinated?: boolean | null;
+  isDewormed?: boolean | null;
 }
 
 export interface CreateAdoptionApplicationDTO {

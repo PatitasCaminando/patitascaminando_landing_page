@@ -10,9 +10,9 @@ export interface Animal {
   slug: string;
   cta: string;
   ageRange?: string;
-  sterilized?: string;
-  vaccinated?: string;
-  dewormed?: string;
+  isSterilized?: boolean | null;
+  isVaccinated?: boolean | null;
+  isDewormed?: boolean | null;
   observation?: string;
   detailCta?: string;
 }

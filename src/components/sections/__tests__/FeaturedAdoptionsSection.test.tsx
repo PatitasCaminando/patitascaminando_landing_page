@@ -23,7 +23,7 @@ describe('FeaturedAdoptionsSection', () => {
 
   it('renders animals when fetched successfully', async () => {
     const mockAnimals = [
-      { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', sterilized: 'Sí', vaccinated: 'Sí', dewormed: 'Sí' }
+      { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', isSterilized: true, isVaccinated: true, isDewormed: true }
     ];
 
     vi.mocked(AnimalsService.getPublicAnimals).mockResolvedValueOnce({
@@ -50,8 +50,8 @@ describe('FeaturedAdoptionsSection', () => {
 
   it('handles filter changes and pagination', async () => {
     const mockAnimals = [
-      { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', sterilized: 'Sí', vaccinated: 'Sí', dewormed: 'Sí' },
-      { id: '2', name: 'Mishi', category: 'Gato', sex: 'Hembra', age: '2', size: 'S', status: 'disponible', slug: 'mishi', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', sterilized: 'Sí', vaccinated: 'Sí', dewormed: 'Sí' }
+      { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', isSterilized: true, isVaccinated: true, isDewormed: true },
+      { id: '2', name: 'Mishi', category: 'Gato', sex: 'Hembra', age: '2', size: 'S', status: 'disponible', slug: 'mishi', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', isSterilized: true, isVaccinated: true, isDewormed: true }
     ];
 
     vi.mocked(AnimalsService.getPublicAnimals).mockResolvedValue({
@@ -91,7 +91,7 @@ describe('FeaturedAdoptionsSection', () => {
   });
 
   it('tests age parsing logic', async () => {
-    const mockAnimal = { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', sterilized: 'Sí', vaccinated: 'Sí', dewormed: 'Sí' };
+    const mockAnimal = { id: '1', name: 'Firulais', category: 'Perro', sex: 'Macho', age: '1', size: 'M', status: 'disponible', slug: 'firulais', imageUrl: '', cta: 'Conocerlo', detailCta: 'Adoptar', observation: '', isSterilized: true, isVaccinated: true, isDewormed: true };
     const customMockAnimals = [
       { ...mockAnimal, age: '2 meses' },
       { ...mockAnimal, age: '10 meses' },

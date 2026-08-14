@@ -27,9 +27,9 @@ describe('AdoptionRequestModal', () => {
     cta: 'Adoptar',
     detailCta: 'Adoptar',
     observation: 'test',
-    sterilized: 'Sí',
-    vaccinated: 'Sí',
-    dewormed: 'Sí'
+    isSterilized: true,
+    isVaccinated: true,
+    isDewormed: true,
   };
 
   beforeEach(() => {

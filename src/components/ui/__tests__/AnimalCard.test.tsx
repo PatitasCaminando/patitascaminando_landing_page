@@ -17,9 +17,9 @@ describe('AnimalCard', () => {
     cta: 'Conocerlo',
     detailCta: 'Quiero adoptarlo',
     observation: 'Lindo perro',
-    sterilized: 'Sí',
-    vaccinated: 'Sí',
-    dewormed: 'Sí'
+    isSterilized: true,
+    isVaccinated: true,
+    isDewormed: true,
   };
 
   it('renders animal basic info', () => {

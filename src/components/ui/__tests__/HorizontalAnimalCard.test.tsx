@@ -16,9 +16,9 @@ describe('HorizontalAnimalCard', () => {
     cta: 'Conocerlo',
     detailCta: 'Quiero adoptarlo',
     observation: 'Lindo perro',
-    sterilized: 'Sí',
-    vaccinated: 'Sí',
-    dewormed: 'Sí'
+    isSterilized: true,
+    isVaccinated: true,
+    isDewormed: true,
   };
 
   it('renders horizontal animal basic info', () => {
